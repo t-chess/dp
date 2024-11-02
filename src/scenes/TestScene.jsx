@@ -1,32 +1,37 @@
-import { Environment, OrthographicCamera } from "@react-three/drei";
-import { Physics } from "@react-three/rapier";
+import { Physics, RigidBody } from "@react-three/rapier";
 import { Suspense, useEffect, useRef } from "react";
-import ThirdPersonCamera from "../components/atoms/ThirdPersonCamera";
-import Ground from "../components/molecules/FixedGround";
+import ModelPrimitive from "../components/atoms/ModelPrimitive";
+import FixedGround from "../components/molecules/FixedGround";
 import PhysicalObject from "../components/molecules/PhysicalObject";
-import Player from "../components/molecules/Player";
+import Player from "../components/organisms/Player";
+import { ModelProvider } from "../hooks/useModel";
 import { useScene } from "../hooks/useScene";
 
 const TestScene = () => {
+  const mapRef = useRef();
   const { setMode } = useScene();
   useEffect(() => {
     setMode("dynamic");
   }, []);
   return (
     <Suspense>
-      <ambientLight intensity={0.7} />
-      <directionalLight
+      <ambientLight intensity={1} />
+      {/* <directionalLight
         intensity={0.65}
         castShadow
         position={[-15, 10, 15]}
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        shadow-bias={-0.00005}
-      ></directionalLight>
+      ></directionalLight> */}
       <Physics debug>
-        <Ground />
+        {/* <FixedGround /> */}
+        <ModelProvider src='/models/animal_crossing_map.glb' ref={mapRef}>
+          <RigidBody type='fixed' colliders={"trimesh"}>
+            <ModelPrimitive ref={mapRef} scale={20} position={[-15, -1, 10]} />
+          </RigidBody>
+        </ModelProvider>
         <PhysicalObject
-          position={[1, 5, 0]}
+          position={[1, 2, 0]}
           restitution={0.9}
           colliders='ball'
           type='dynamic'
@@ -36,7 +41,7 @@ const TestScene = () => {
             <meshStandardMaterial color='hotpink' />
           </mesh>
         </PhysicalObject>
-        <Player />
+        <Player position={[0, 2, 0]} />
       </Physics>
     </Suspense>
   );

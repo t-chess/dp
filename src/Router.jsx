@@ -1,11 +1,26 @@
-import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import Config from "./Config";
+import Game from "./Game";
 import { SceneProvider } from "./hooks/useScene";
 const Router = createBrowserRouter([
   {
-    path: "/",
+    path: "/game",
     element: <SceneProvider />,
-    children: [{ path: "", element: <App /> }],
+    children: [{ path: "", element: <Game /> }],
+  },
+  // {
+  //   path: "/data",
+  //   element: <SceneProvider />,
+  //   children: [{ path: "", element: <App /> }],
+  // },
+  {
+    path: "/config",
+    element: <SceneProvider />,
+    children: [{ path: "", element: <Config /> }],
+  },
+  {
+    path: "*",
+    element: <Navigate to='/config' />,
   },
 ]);
 

@@ -2,7 +2,7 @@ import { Physics } from "@react-three/rapier";
 import { Suspense, useEffect } from "react";
 import Ground from "../components/molecules/FixedGround";
 import Skydome from "../components/atoms/Skydome";
-import Player from "../components/molecules/Player";
+import Player from "../components/organisms/Player";
 import { useScene } from "../hooks/useScene";
 import { Environment } from "@react-three/drei";
 
