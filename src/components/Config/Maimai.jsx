@@ -8,50 +8,90 @@ Source: https://sketchfab.com/3d-models/cyberpunk-2077-fanart-makigai-maimai-p12
 Title: Cyberpunk 2077 fanart: Makigai MaiMai P126
 */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { useConfigurator } from "../../hooks/useConfigurator";
+import { AnimationMixer, AnimationUtils, LoopOnce, MeshPhysicalMaterial, TextureLoader } from 'three';
+import { useLoader, useThree } from '@react-three/fiber';
 
 export function Model(props) {
-  const group = React.useRef()
-  const { nodes, materials, animations } = useGLTF('/models/maimai-transformed.glb')
+  const group = useRef();
+  const { nodes, materials, animations } = useGLTF('/models/maimai-transformed.glb');
   const { actions } = useAnimations(animations, group);
 
-  const { chairColor, lights } = useConfigurator();
+  const maps  = useLoader(TextureLoader, ['/textures/car/base_red.jpg','/textures/car/metallic.jpg', '/textures/car/mixed_AO.jpg', '/textures/car/normal.jpg', '/textures/car/opacity.jpg', '/textures/car/roughness.jpg','/textures/car/base_blue.jpg','/textures/car/base_yellow.jpg','/textures/car/base_green.jpg'])
+  maps.forEach(map=>{
+    map.wrapS = 1000;
+    map.wrapT = 1000;
+    map.flipY = false;
+  })
+  const [baseColor, metallic, mixed_AO, normal, opacity, roughness, blue, yellow, green ] = maps;
+  const colors = {red:baseColor,blue,yellow,green};
+  const surfaceMaterial = new MeshPhysicalMaterial({
+    map:baseColor,metalnessMap:metallic,aoMap:mixed_AO,normalMap:normal,alphaMap:opacity,roughnessMap:roughness,
+    transparent: true, opacity:1,metalness:1, 
+  });
+  // const surfaceMaterial = materials.TEXTURE;
+
+
+  const { surfaceColor, mode } = useConfigurator();
 
   useEffect(() => {
-    // materials.Main.color = new Color(chairColor.color);
-  }, [materials, chairColor, lights]);
+    surfaceMaterial.map = colors[surfaceColor.name];
+  }, [materials, surfaceColor]);
+
+  const handleDoor = (open) => {
+    if (actions) {
+      const doorActions = ['ArmatureAction', 'Top door boneAction', 'door lowAction.002'];
+      doorActions.forEach(action=>{
+        if (open) {
+          actions[action].setLoop(LoopOnce);
+          actions[action].clampWhenFinished = true;
+          actions[action].play();
+        } else if (actions[action].paused) {
+          // console.log(actions[action])
+          console.log('play reverse')
+        } else if (actions[action].time>0) {
+          // console.log(actions[action])
+          console.log('pause animation and reverse')
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    handleDoor(mode==='inside')
+  }, [mode]);
   
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <group name="Top_door_bone" position={[-0.935, 1.938, 1.131]}>
           <group name="Top_door_bone_1" rotation={[-1.603, 0, 0]}>
-            <mesh name="door_heigh" geometry={nodes.door_heigh.geometry} material={materials.TEXTURE} position={[0.935, 1.192, -1.901]} rotation={[1.603, 0, 0]}>
+            <mesh name="door_heigh" geometry={nodes.door_heigh.geometry} material={surfaceMaterial} position={[0.935, 1.192, -1.901]} rotation={[1.603, 0, 0]}>
               <group name="Armature" position={[-1.078, 1.401, 0.897]}>
                 <group name="Lower_door_bone" position={[0.001, 0.04, 0.367]} rotation={[-1.678, 0, 0.003]}>
-                  <mesh name="door_middle" geometry={nodes.door_middle.geometry} material={materials.TEXTURE} position={[1.081, 1.407, -1.297]} rotation={[1.678, -0.003, 0]}>
-                    <mesh name="door_heigh001" geometry={nodes.door_heigh001.geometry} material={materials.TEXTURE} position={[-1.172, 1.069, 1.252]} />
+                  <mesh name="door_middle" geometry={nodes.door_middle.geometry} material={surfaceMaterial} position={[1.081, 1.407, -1.297]} rotation={[1.678, -0.003, 0]}>
+                    <mesh name="door_heigh001" geometry={nodes.door_heigh001.geometry} material={surfaceMaterial} position={[-1.172, 1.069, 1.252]} />
                   </mesh>
                 </group>
               </group>
             </mesh>
           </group>
         </group>
-        <mesh name="12v_battery" geometry={nodes['12v_battery'].geometry} material={materials.TEXTURE} position={[0.901, 1.024, 1.748]} />
+        <mesh name="12v_battery" geometry={nodes['12v_battery'].geometry} material={surfaceMaterial} position={[0.901, 1.024, 1.748]} />
         <group name="body_headlight_part001" position={[0, 0.017, -0.001]}>
           <mesh name="Cube008" geometry={nodes.Cube008.geometry} material={materials.headlight} />
-          <mesh name="Cube008_1" geometry={nodes.Cube008_1.geometry} material={materials.TEXTURE} />
+          <mesh name="Cube008_1" geometry={nodes.Cube008_1.geometry} material={surfaceMaterial} />
         </group>
-        <mesh name="door_low" geometry={nodes.door_low.geometry} material={materials.TEXTURE} position={[-1.107, 0.368, 0.368]}>
+        <mesh name="door_low" geometry={nodes.door_low.geometry} material={surfaceMaterial} position={[-1.107, 0.368, 0.368]}>
           <mesh name="KONNICHIWA1001" geometry={nodes.KONNICHIWA1001.geometry} material={materials['KONNICHIWA1.001']} position={[-0.076, 0.176, 0.001]} rotation={[-0.825, -0.803, -1.548]} scale={[0.173, 0.173, 0]} />
         </mesh>
-        <mesh name="engine_lid" geometry={nodes.engine_lid.geometry} material={materials.TEXTURE} position={[0, 0.872, 1.908]}>
+        <mesh name="engine_lid" geometry={nodes.engine_lid.geometry} material={surfaceMaterial} position={[0, 0.872, 1.908]}>
           <mesh name="HYBRID_VTEK004" geometry={nodes.HYBRID_VTEK004.geometry} material={materials['HYBRID VTEK']} position={[-0.829, 0.398, -0.045]} rotation={[0.678, 0, 0]} />
-          <mesh name="Makigai_logo" geometry={nodes.Makigai_logo.geometry} material={materials.TEXTURE} position={[0.001, 0.16, -0.036]} rotation={[1.524, 0, 0]} />
+          <mesh name="Makigai_logo" geometry={nodes.Makigai_logo.geometry} material={surfaceMaterial} position={[0.001, 0.16, -0.036]} rotation={[1.524, 0, 0]} />
           <group name="rear_light_unit" position={[0.784, 0.402, -0.06]} rotation={[0.011, 0, 0]}>
-            <mesh name="Cube009" geometry={nodes.Cube009.geometry} material={materials.TEXTURE} />
+            <mesh name="Cube009" geometry={nodes.Cube009.geometry} material={surfaceMaterial} />
             <mesh name="Cube009_1" geometry={nodes.Cube009_1.geometry} material={materials.headlight} />
           </group>
         </mesh>

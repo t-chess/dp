@@ -15,6 +15,7 @@ const Scene = () => {
       </Suspense>
       <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[15, 15]} />
+        {/* dynamically adjust reflection or switch to simpler material depending on fps */}
         <MeshReflectorMaterial
           blur={[150, 40]}
           resolution={1024}
@@ -30,9 +31,11 @@ const Scene = () => {
       </mesh>
       <OrbitControls
         enablePan={false}
-        enableZoom={false}
+        enableZoom={true}
         minPolarAngle={0.3}
         maxPolarAngle={Math.PI / 2.25}
+        maxDistance={6}
+        minDistance={2.5}
       />
     </group>
   );

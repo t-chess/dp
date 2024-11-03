@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
 
-const chairColors = [
+const surfaceColors = [
   {
     color: "#683434",
-    name: "brown",
+    name: "red",
   },
   {
     color: "#1a5e1a",
@@ -14,28 +14,12 @@ const chairColors = [
     name: "blue",
   },
   {
-    color: "#896599",
-    name: "mauve",
-  },
-  {
     color: "#ffa500",
-    name: "orange",
+    name: "yellow",
   },
-  {
-    color: "#59555b",
-    name: "grey",
-  },
-  {
-    color: "#222222",
-    name: "black",
-  },
-  {
-    color: "#ececec",
-    name: "white",
-  },
-];
+]
 
-const cushionColors = [
+const insidesColors = [
   {
     color: "#683434",
     name: "brown",
@@ -43,54 +27,27 @@ const cushionColors = [
   {
     color: "#1a5e1a",
     name: "green",
-  },
-  {
-    color: "#659994",
-    name: "blue",
-  },
-  {
-    color: "#896599",
-    name: "mauve",
-  },
-  {
-    color: "#ffa500",
-    name: "orange",
-  },
-  {
-    color: "#59555b",
-    name: "grey",
-  },
-  {
-    color: "#222222",
-    name: "black",
-  },
-  {
-    color: "#ececec",
-    name: "white",
-  },
+  }
 ];
 
 const ConfiguratorContext = createContext({});
 
 export const ConfiguratorProvider = (props) => {
-  const [material, setMaterial] = useState("leather");
+  const [wheels, setWheels] = useState(1);
   const [lights, setLights] = useState(false);
-  const [chairColor, setChairColor] = useState(chairColors[0]);
-  const [cushionColor, setCushionColor] = useState(cushionColors[0]);
+  const [surfaceColor, setSurfaceColor] = useState(surfaceColors[0]);
+
+  const [mode, setMode] = useState('main');
+  const [insidesColor, setInsidesColor] = useState(insidesColors[0]);
 
   return (
     <ConfiguratorContext.Provider
       value={{
-        material,
-        setMaterial,
-        lights,
-        setLights,
-        chairColors,
-        chairColor,
-        setChairColor,
-        cushionColors,
-        cushionColor,
-        setCushionColor,
+        wheels, setWheels,
+        lights, setLights,
+        surfaceColors,surfaceColor,setSurfaceColor,
+        insidesColors,insidesColor,setInsidesColor,
+        mode, setMode
       }}
     >
       {props.children}
