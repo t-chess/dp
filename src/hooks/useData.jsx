@@ -9,7 +9,13 @@ export const DataProvider = ({children}) => {
         setLayers(prev=>([...prev, {id:prev[prev.length-1]?.id+1||1, json:data}]))
     }
 
-    return <DataContext.Provider value={{layers,pushToLayers}}>{children}</DataContext.Provider>
+    const changeInfo = (id, data) => {
+        setLayers(prev=>prev.map(layer=>
+            layer.id===id ? {...layer, ...data} : layer
+        ))
+    }
+
+    return <DataContext.Provider value={{layers,pushToLayers, changeInfo}}>{children}</DataContext.Provider>
 }
 
 export const useData = () => {
