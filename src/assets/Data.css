@@ -1,0 +1,40 @@
+.data_ui_left {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    min-width: 300px;
+    color: white;
+}
+
+.data_ui_left .item label {
+    padding: 1rem 2rem;
+}
+
+.data_ui_left .item button {
+    display: block;
+    width: 100%;
+}
+
+.data_ui_left .item textarea {
+    min-width: 250px;
+    min-height: 150px;
+}
+
+.data_ui_right {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    height: calc(100% - 2rem);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.layerUI {
+    padding: 1rem;
+}
+
+.layerUI h3 {
+    display: flex;
+    gap: 15px;
+}

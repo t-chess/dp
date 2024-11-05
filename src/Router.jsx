@@ -9,11 +9,6 @@ const Router = createBrowserRouter([
     element: <SceneProvider />,
     children: [{ path: "", element: <Game /> }],
   },
-  // {
-  //   path: "/data",
-  //   element: <SceneProvider />,
-  //   children: [{ path: "", element: <App /> }],
-  // },
   {
     path: "/config",
     element: <SceneProvider />,

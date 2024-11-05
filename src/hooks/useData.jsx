@@ -3,16 +3,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 const DataContext = createContext();
 
 export const DataProvider = ({children}) => {
-    const [borders, setBorders] = useState();
+    const [layers, setLayers] = useState([]);
 
-    useEffect(()=>{
-        fetch("/countries.geo.json")
-        .then((response) => response.json())
-        .then((data) => setBorders(data))
-        .catch((error) => console.error("err in borders file", error));
-    },[])
+    const pushToLayers = (data) => {
+        setLayers(prev=>([...prev, {id:prev[prev.length-1]?.id+1||1, json:data}]))
+    }
 
-    return <DataContext.Provider value={{borders}}>{children}</DataContext.Provider>
+    return <DataContext.Provider value={{layers,pushToLayers}}>{children}</DataContext.Provider>
 }
 
 export const useData = () => {

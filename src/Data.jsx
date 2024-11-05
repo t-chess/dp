@@ -3,6 +3,8 @@ import { Canvas } from "@react-three/fiber";
 import Globe from "./components/Data/Globe";
 import { useEffect, useState } from "react";
 import { DataProvider } from "./hooks/useData";
+import UI from "./components/Data/UI";
+import "./assets/Data.css";
 
 const Data = () => {
   return (
@@ -14,10 +16,7 @@ const Data = () => {
         <ambientLight />
         <color attach='background' args={["#121212"]} />
       </Canvas>
-      <div>
-        <label>Upload geoJSON:</label>
-        <input type="file" />
-      </div>
+      <UI />
     </DataProvider>
   );
 };

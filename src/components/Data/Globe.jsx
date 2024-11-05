@@ -6,14 +6,14 @@ import { useData } from '../../hooks/useData';
 
 
 const Globe = () => {
-  const {borders} = useData();
+  const {layers} = useData();
   return (
     <group>
       <mesh>
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial color="#87ceeb" wireframe={false} />
       </mesh>
-      <DataLayer geoJson={borders} />
+      {layers.map(layer=><DataLayer key={layer.id} {...layer} />)}
     </group>
   );
 }
