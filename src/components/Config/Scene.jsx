@@ -1,10 +1,13 @@
 import {
   ContactShadows,
+  BakeShadows,
   Environment,
   Lightformer,
   MeshReflectorMaterial,
   OrbitControls,
+  usePerformanceMonitor,
 } from "@react-three/drei";
+import { Bloom, EffectComposer, Noise} from '@react-three/postprocessing'
 import { Suspense } from "react";
 // import { Model } from "./Maimai";
 import { Model } from "./Model";
@@ -13,7 +16,6 @@ import { useConfigurator } from "../../hooks/useConfigurator";
 
 
 const Scene = () => {
-  const {lights} = useConfigurator();
   return (
     <group position={[0, -1, 0]}>
       <Suspense fallback={null}>
@@ -31,6 +33,7 @@ const Scene = () => {
         <EffectComposer>
           <Bloom intensity={1} luminanceThreshold={0}  luminanceSmoothing={0} mipmapBlur={false} />
         </EffectComposer>
+        <BakeShadows />
       </Suspense>
       <OrbitControls
         enablePan={false}
