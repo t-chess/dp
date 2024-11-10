@@ -1,52 +1,43 @@
 import { createContext, useContext, useState } from "react";
 
-const surfaceColors = [
-  {
-    color: "#683434",
-    name: "red",
-  },
-  {
-    color: "#1a5e1a",
-    name: "green",
-  },
-  {
-    color: "#659994",
-    name: "blue",
-  },
-  {
-    color: "#ffa500",
-    name: "yellow",
-  },
-]
-
-const insidesColors = [
-  {
-    color: "#683434",
-    name: "brown",
-  },
-  {
-    color: "#1a5e1a",
-    name: "green",
-  }
+const mainColors = [
+  { color: "#1f3b73", name: "blue" },
+  { color: "#C0C0C0", name: "silver" },
+  { color: "#484848", name: "black" },
+  { color: "#ffd700", name: "yellow" }
 ];
+
+const stripesColors = [
+  { color: "#f0f0f0", name: "white" },
+  { color: "#484848", name: "black" },
+  { color: "#1f3b73", name: "blue" },
+  { color: "#ff69b4", name: "hot_pink" }
+];
+
+const seats = [
+  {color: "#484848",name: "leather"},
+  {color: "#484848",name: "fabric"}
+]
 
 const ConfiguratorContext = createContext({});
 
 export const ConfiguratorProvider = (props) => {
   const [wheels, setWheels] = useState(1);
-  const [lights, setLights] = useState(false);
-  const [surfaceColor, setSurfaceColor] = useState(surfaceColors[0]);
+  const [lights, setLights] = useState(true);
+  const [mainColor, setMainColor] = useState(mainColors[0]);
+  const [stripesColor, setStripesColor] = useState(stripesColors[0]);
 
-  const [mode, setMode] = useState('main');
-  const [insidesColor, setInsidesColor] = useState(insidesColors[0]);
+  const [mode, setMode] = useState();
+  const [seat, setSeat] = useState(seats[0].name);
 
   return (
     <ConfiguratorContext.Provider
       value={{
         wheels, setWheels,
         lights, setLights,
-        surfaceColors,surfaceColor,setSurfaceColor,
-        insidesColors,insidesColor,setInsidesColor,
+        mainColors,mainColor, setMainColor,
+        stripesColors, stripesColor, setStripesColor,
+        seats,seat,setSeat,
         mode, setMode
       }}
     >
