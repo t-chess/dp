@@ -16,13 +16,17 @@ const UI = () => {
 
     }
 
-    const fetchURL = (e) => {
-        e.preventDefault();
+    const fetchURL = (value) => {
+        // e.preventDefault();
         fetch(value)
             .then((response) => response.json())
             .then((data) => pushToLayers(data))
             .catch((error) => console.error("err in url", error));
     }
+
+    useEffect(()=>{
+        fetchURL('/countries.geo.json')
+    },[])
 
     return (
         <>

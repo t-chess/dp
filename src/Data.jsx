@@ -7,6 +7,7 @@ import UI from "./components/Data/UI";
 import "./assets/Data.css";
 
 const Data = () => {
+  
   return (
     <DataProvider>
       <Canvas camera={{ position:[2,0,2], fov: 50 }}>
@@ -16,9 +17,11 @@ const Data = () => {
         <ambientLight />
         <color attach='background' args={["#121212"]} />
       </Canvas>
-      <UI />
+      {/* <UI /> */}
     </DataProvider>
   );
 };
 
 export default Data;
+
+// // https://thenextweb.com/news/visualization-worlds-airline-flight-traffic-mesmerizing

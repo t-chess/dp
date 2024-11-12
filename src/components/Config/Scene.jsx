@@ -2,17 +2,12 @@ import {
   ContactShadows,
   BakeShadows,
   Environment,
-  Lightformer,
-  MeshReflectorMaterial,
   OrbitControls,
   usePerformanceMonitor,
 } from "@react-three/drei";
-import { Bloom, EffectComposer, Noise} from '@react-three/postprocessing'
 import { Suspense } from "react";
-// import { Model } from "./Maimai";
 import { Model } from "./Model";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { useConfigurator } from "../../hooks/useConfigurator";
 
 
 const Scene = () => {
