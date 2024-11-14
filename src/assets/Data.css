@@ -1,40 +1,28 @@
-.data_ui_left {
+.ui {
     position: absolute;
-    left: 1rem;
-    bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    min-width: 300px;
-    color: white;
-}
-
-.data_ui_left .item label {
-    padding: 1rem 2rem;
-}
-
-.data_ui_left .item button {
-    display: block;
+    bottom: 0;
+    left: 0;
     width: 100%;
-}
-
-.data_ui_left .item textarea {
-    min-width: 250px;
-    min-height: 150px;
-}
-
-.data_ui_right {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    height: calc(100% - 2rem);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-}
-
-.layerUI {
     padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
-.layerUI h3 {
+.selectedAirport,
+.toggles {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    width: fit-content;
+}
+
+.toggles {
+    margin-left: auto;
+}
+
+.toggles label {
     display: flex;
-    gap: 15px;
+    gap: 1rem;
+    padding: 0.5rem 0;
 }

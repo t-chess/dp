@@ -1,15 +1,25 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { CatmullRomCurve3, QuadraticBezierCurve3, Vector3 } from "three";
+import { CatmullRomCurve3, Color, QuadraticBezierCurve3, Vector3 } from "three";
 
 const DataContext = createContext();
 
 export const DataProvider = ({children}) => {
-    const [borders, setBorders] = useState(); 
-
-    const [flights, setFlights] = useState();
-    const [airports, setAirports] = useState();
+    const [borders, setBorders] = useState();
     const radius = 1;
 
+    const [allFlights, setAllFlights] = useState(false);
+
+    const [airports, setAirports] = useState();
+    const [selectedAirport, setSelectedAirport] = useState(null); 
+
+    const color = new Color("#75123f");
+    const airportsColor = [color.r, color.g, color.b];
+    const segments = 8;
+
+
+    const [flights, setFlights] = useState();
+    const timerange = [new Date('2024-11-12T00:05:00+00:00').getTime(), new Date('2024-11-14T01:00:00').getTime()];
+    
     const latLongToVector3 = (lat, lon) => {
         if (isNaN(lat)||isNaN(lon)) {
             return new Vector3(0,0,0)
@@ -54,9 +64,9 @@ export const DataProvider = ({children}) => {
                 positions[index * 3 + 1] = vector.y;
                 positions[index * 3 + 2] = vector.z;
     
-                colors[index * 3] = 0;      // R
-                colors[index * 3 + 1] = 0;  // G
-                colors[index * 3 + 2] = 1;  // B
+                colors[index * 3] = airportsColor[0];
+                colors[index * 3 + 1] = airportsColor[1];  
+                colors[index * 3 + 2] = airportsColor[2];  
     
                 metadata.push({
                     ...airport,
@@ -77,50 +87,42 @@ export const DataProvider = ({children}) => {
     };
 
 
-    const createCurve = (start, end, segments) => {
+    const createCurve = (start, end) => {
         const midPoint = new Vector3().addVectors(start, end).normalize().multiplyScalar(radius * 1.3);
         const curve = new QuadraticBezierCurve3(start, midPoint, end);
         const arcPoints = curve.getPoints(segments).flatMap(point => [point.x, point.y, point.z]);
-        console.log(arcPoints)
         return arcPoints;
     };
     
     const flightsData = useMemo(() => {
         if (!airports || !flights) return null
-        const segments = 8;
-        const pointsPerFlight = segments + 1; 
-        const totalPoints = flights.reduce((count, flight) => {
-            const departureAirport = airports[flight.departure.iata];
-            const arrivalAirport = airports[flight.arrival.iata];
-            return departureAirport && arrivalAirport ? count + pointsPerFlight : count;
-        }, 0);
-        const positions = new Float32Array(totalPoints * 3);
-        const colors = new Float32Array(totalPoints * 3);
-        const metadata = [];
+        return flights.map(flight => {
+                const departureAirport = airports[flight.departure.iata];
+                const arrivalAirport = airports[flight.arrival.iata];
+                if (!departureAirport || !arrivalAirport) return null;
 
-        let currentIndex = 0; 
-        flights.forEach((flight, i) => {
-            const departureAirport = airports[flight.departure.iata];
-            const arrivalAirport = airports[flight.arrival.iata];
-            if (!departureAirport || !arrivalAirport) return; 
-            const departurePos = latLongToVector3(departureAirport.latitude, departureAirport.longitude);
-            const arrivalPos = latLongToVector3(arrivalAirport.latitude, arrivalAirport.longitude);
+                const departurePos = latLongToVector3(departureAirport.latitude, departureAirport.longitude);
+                const arrivalPos = latLongToVector3(arrivalAirport.latitude, arrivalAirport.longitude);
+                const curvePoints = createCurve(departurePos, arrivalPos);
 
-            const curve = createCurve(departurePos, arrivalPos, segments);
-            curve.forEach((coord, j) => {
-                positions[currentIndex * 3 + j] = coord;
-            });    
-            for (let s = 0; s <= segments; s++) {
-                const colorRatio = s / segments;
-                colors[currentIndex * 3 + s * 3] = colorRatio;     // Red channel
-                colors[currentIndex * 3 + s * 3 + 1] = 0;          // Green channel
-                colors[currentIndex * 3 + s * 3 + 2] = 1 - colorRatio; // Blue channel
-            }
-            metadata.push(flight);
-            currentIndex += pointsPerFlight;
-        });
+                const positions = new Float32Array(curvePoints.length);
+                const colors = new Float32Array(curvePoints.length);
 
-        return { positions, colors, metadata };
+                curvePoints.forEach((coord, index) => {
+                    positions[index] = coord;
+                });
+                for (let s = 0; s <= segments; s++) {
+                    const colorRatio = s / segments;
+                    colors[s * 3] = 1.0; // Red remains fully intense at 1.0 for both colors
+                    colors[s * 3 + 1] = 0.36 + 0.64 * colorRatio; // Green goes from 0.36 to 1.0
+                    colors[s * 3 + 2] = 0.0; // Blue remains 0 to keep within the orange-yellow range
+                }
+                return {
+                    positions,
+                    colors,
+                    metadata: flight,
+                };
+            }).filter(Boolean); 
     }, [flights]);
     
 
@@ -142,7 +144,7 @@ export const DataProvider = ({children}) => {
             .catch((error) => console.error("err in borders", error));
     }
 
-    return <DataContext.Provider value={{latLongToVector3, radius, borders, flightsData, airportsData}}>{children}</DataContext.Provider>
+    return <DataContext.Provider value={{latLongToVector3, radius, borders, flightsData, airportsData, selectedAirport, airportsColor, segments, setSelectedAirport, allFlights, setAllFlights}}>{children}</DataContext.Provider>
 }
 
 export const useData = () => {

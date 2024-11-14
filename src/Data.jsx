@@ -15,13 +15,11 @@ const Data = () => {
         <Stats />
         <OrbitControls />
         <ambientLight />
-        <color attach='background' args={["#121212"]} />
+        <color attach='background' args={["#1a060f"]} />
       </Canvas>
-      {/* <UI /> */}
+      <UI />
     </DataProvider>
   );
 };
 
 export default Data;
-
-// // https://thenextweb.com/news/visualization-worlds-airline-flight-traffic-mesmerizing

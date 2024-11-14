@@ -7,15 +7,14 @@ import Airports from './Airports';
 
 
 const Globe = () => {
-  const {radius,borders} = useData();
-  // const mercator  = useLoader(TextureLoader, '/data/Mercator_projection.jpg'); // https://commons.wikimedia.org/wiki/File:Mercator_projection_Square.JPG
+  const {borders,radius} = useData();
   return (
     <group>
       <mesh>
         <sphereGeometry args={[radius, 64, 64]} />
-        <meshStandardMaterial color="#87ceeb" wireframe={false} />
+        <meshStandardMaterial color={0x222222} wireframe={false} />
       </mesh>
-      {borders&&<GeoJson color={0xFFFFFF} json={borders} />}
+      {borders&&<GeoJson color={0x919191} json={borders} />}
 
       <Airports />
       <Flights />
