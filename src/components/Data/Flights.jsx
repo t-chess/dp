@@ -7,11 +7,10 @@ function Flights() {
   const pointsRef = useRef();
   const { flightsData, allFlights, segments } = useData();
   const [visibleFlights, setVisibleFlights] = useState(new Set());
-  const [hoveredPoint, setHoveredPoint] = useState(null);
-  const totalSegments = segments + 1; 
+  const totalSegments = segments + 1;
 
   useEffect(() => {
-    if (flightsData) {
+    if (flightsData&&meshRef.current) {
       const geometry = new BufferGeometry();
       const totalPoints = flightsData.length * totalSegments;
 
@@ -29,6 +28,7 @@ function Flights() {
       geometry.setAttribute('opacity', new BufferAttribute(opacities, 1));
 
       meshRef.current.geometry = geometry;
+      meshRef.current.geometry.attributes.opacity.needsUpdate = true;
     }
   }, [flightsData]);
 
@@ -43,18 +43,6 @@ function Flights() {
       }
     });
     setVisibleFlights(flightsToShow);
-  };
-
-  const handlePointerMove = (event) => {
-    if (event.instanceId !== undefined) {
-      setHoveredPoint(event.instanceId);
-    } else {
-      setHoveredPoint(null);
-    }
-  };
-
-  const handlePointerOut = () => {
-    setHoveredPoint(null);
   };
 
   useEffect(() => {
@@ -74,15 +62,11 @@ function Flights() {
   useEffect(()=>{
     if (allFlights&&meshRef.current) {
       const opacityArray = meshRef.current.geometry.attributes.opacity.array;
-      for (let i = 0; i < opacityArray.length; i++) {
-        opacityArray[i] = 1;
-      }
+      opacityArray.fill(1);
       meshRef.current.geometry.attributes.opacity.needsUpdate = true;
     } else if (meshRef.current) {
       const opacityArray = meshRef.current.geometry.attributes.opacity.array;
-      for (let i = 0; i < opacityArray.length; i++) {
-        opacityArray[i] = 0;
-      }
+      opacityArray.fill(0);
       meshRef.current.geometry.attributes.opacity.needsUpdate = true;
     }
   }, [allFlights])

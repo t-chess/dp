@@ -24,7 +24,7 @@ export function Model(props) {
   const { actions } = useAnimations(animations, group)
 
   // glowing
-  const glowMaterial = useRef(new MeshStandardMaterial({color:0xFFD17D,emissive: 0xFFD17D,emissiveIntensity: 0.3,roughness: 0.5,metalness: 0.3,toneMapped:false}));
+  const glowMaterial = useRef(new MeshStandardMaterial({color:0xFFD17D,emissive: 0xFFD17D,emissiveIntensity: 1,roughness: 0.5,metalness: 0.3,toneMapped:false}));
   
   // metallic materials
   const color  = useLoader(TextureLoader, ['/config/color_color.jpg', '/config/color_roughness.jpg'])
@@ -46,17 +46,17 @@ export function Model(props) {
   fabric.forEach(f=>{f.wrapS=f.wrapT=RepeatWrapping;f.repeat.set(10,10);})
   const textileMaterial = useRef(new MeshPhysicalMaterial({ color:0x222222,roughnessMap:leather,roughness: 0.9 }));
   
-  const { mainColor,stripesColor, seat, lights, mode } = useConfigurator();
+  const { mainColor,stripesColor, seat, mode } = useConfigurator();
 
   useEffect(() => {
     if (mainColor?.color) {
-      carPaintMaterial.current.color.setHex(mainColor.color.replace('#', '0x'));
+      carPaintMaterial.current.color.setHex(mainColor.color);
     }
   }, [mainColor]);
 
   useEffect(() => {
     if (stripesColor?.color) {
-      stripesMaterial.current.color.setHex(stripesColor.color.replace('#', '0x'));
+      stripesMaterial.current.color.setHex(stripesColor.color);
     }
   }, [stripesColor]);
 
@@ -71,10 +71,6 @@ export function Model(props) {
       textileMaterial.current.color.setHex(0x333333);
     }
   }, [seat]);
-
-  useEffect(()=>{
-    glowMaterial.current.emissiveIntensity = lights?1:0.3;
-  }, [lights])
   
 
   const handleDoor = (mode) => {
@@ -117,7 +113,7 @@ export function Model(props) {
       wheelRubberRef.current?.setMatrixAt(i, matrix);
       wheelMetalRef.current?.setMatrixAt(i, matrix);
     });
-    if (wheelRubberRef.current) wheelRubberRef.current.instanceMatrix.needsUpdate = true;
+    if (wheelRubberRef.current) { wheelRubberRef.current.instanceMatrix.needsUpdate = true; }
     if (wheelMetalRef.current) wheelMetalRef.current.instanceMatrix.needsUpdate = true;
   }, [wheels]);
   // WHEELS END

@@ -1,10 +1,4 @@
-import {
-  ContactShadows,
-  BakeShadows,
-  Environment,
-  OrbitControls,
-  usePerformanceMonitor,
-} from "@react-three/drei";
+import {ContactShadows,BakeShadows,Environment} from "@react-three/drei";
 import { Suspense } from "react";
 import { Model } from "./Model";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
@@ -17,7 +11,7 @@ const Scene = () => {
         <Model position={[0.5, 0, 0]} rotation={[0, -Math.PI / 8, 0]} />
         <Environment preset='night' />
         <ambientLight intensity={2} />
-        <ContactShadows opacity={0.3} />
+        <ContactShadows opacity={0.3} frames={1} />
         <directionalLight position={[-3, 3, -3]} intensity={2}  />
 
         <mesh rotation={[Math.PI / 2, 0, 0]} position={[0.4, 0.01, 0.4]}>
@@ -30,14 +24,6 @@ const Scene = () => {
         </EffectComposer>
         <BakeShadows />
       </Suspense>
-      <OrbitControls
-        enablePan={false}
-        enableZoom={true}
-        minPolarAngle={0.3}
-        maxPolarAngle={Math.PI / 2}
-        maxDistance={6}
-        minDistance={2.5}
-      />
     </group>
   );
 };

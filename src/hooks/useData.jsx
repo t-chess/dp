@@ -3,9 +3,8 @@ import { CatmullRomCurve3, Color, QuadraticBezierCurve3, Vector3 } from "three";
 
 const DataContext = createContext();
 
-export const DataProvider = ({children}) => {
-    const [borders, setBorders] = useState();
-    const radius = 1;
+export const DataProvider = ({radius, children}) => {
+    const [layers, setLayers] = useState([]);
 
     const [allFlights, setAllFlights] = useState(false);
 
@@ -31,6 +30,13 @@ export const DataProvider = ({children}) => {
         const z = radius * Math.sin(phi) * Math.sin(theta);
         return new Vector3(x, y, z);
     }
+
+    const createCurve = (start, end) => {
+        const midPoint = new Vector3().addVectors(start, end).normalize().multiplyScalar(radius * 1.3);
+        const curve = new QuadraticBezierCurve3(start, midPoint, end);
+        const arcPoints = curve.getPoints(segments).flatMap(point => [point.x, point.y, point.z]);
+        return arcPoints;
+    };
 
     const fetchAirports = () => {
         fetch('/data/ALL_AIRPORTS.json')
@@ -85,14 +91,6 @@ export const DataProvider = ({children}) => {
             .then((data) => setFlights(data))
             .catch((error) => console.error("Error fetching flights:", error));
     };
-
-
-    const createCurve = (start, end) => {
-        const midPoint = new Vector3().addVectors(start, end).normalize().multiplyScalar(radius * 1.3);
-        const curve = new QuadraticBezierCurve3(start, midPoint, end);
-        const arcPoints = curve.getPoints(segments).flatMap(point => [point.x, point.y, point.z]);
-        return arcPoints;
-    };
     
     const flightsData = useMemo(() => {
         if (!airports || !flights) return null
@@ -124,7 +122,13 @@ export const DataProvider = ({children}) => {
                 };
             }).filter(Boolean); 
     }, [flights]);
-    
+
+    const fetchBorders = () => {
+        fetch('/data/countries.geo.json')
+            .then((response) => response.json())
+            .then((data) => setLayers([{id:1, color: "#4f4f4f", name:'Countries', json:data}]))
+            .catch((error) => console.error("err in borders", error));
+    }
 
     useEffect(()=>{
         fetchAirports();
@@ -136,15 +140,7 @@ export const DataProvider = ({children}) => {
             fetchFlights();
         }
     },[airports])
-
-    const fetchBorders = () => {
-        fetch('/data/countries.geo.json')
-            .then((response) => response.json())
-            .then((data) => setBorders(data))
-            .catch((error) => console.error("err in borders", error));
-    }
-
-    return <DataContext.Provider value={{latLongToVector3, radius, borders, flightsData, airportsData, selectedAirport, airportsColor, segments, setSelectedAirport, allFlights, setAllFlights}}>{children}</DataContext.Provider>
+    return <DataContext.Provider value={{latLongToVector3, radius, layers, setLayers, flightsData, airportsData, selectedAirport, airportsColor, segments, setSelectedAirport, allFlights, setAllFlights}}>{children}</DataContext.Provider>
 }
 
 export const useData = () => {

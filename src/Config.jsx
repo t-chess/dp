@@ -1,10 +1,9 @@
-import { AdaptiveDpr, PerformanceMonitor, Stats } from "@react-three/drei";
+import { AdaptiveDpr, OrbitControls, PerformanceMonitor, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import Scene from "./components/Config/Scene";
 import UI from "./components/Config/UI";
 import "./assets/Config.css";
 import { ConfiguratorProvider } from "./hooks/useConfigurator";
-import Camera from "./components/Config/Camera";
 import { useState } from "react";
 
 const Config = () => {
@@ -18,6 +17,14 @@ const Config = () => {
             <color attach='background' args={["#121212"]} />
             <Scene />
           <AdaptiveDpr pixelated />
+          <OrbitControls
+            enablePan={false}
+            enableZoom={true}
+            minPolarAngle={0.3}
+            maxPolarAngle={Math.PI / 2}
+            maxDistance={6}
+            minDistance={2.5}
+          />
         </PerformanceMonitor>
       </Canvas>
       <UI />

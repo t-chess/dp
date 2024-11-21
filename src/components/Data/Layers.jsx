@@ -1,11 +1,16 @@
-import { useThree } from "@react-three/fiber";
 import { memo, useEffect, useRef, useState } from "react";
-import * as THREE from "three";
 import { useData } from "../../hooks/useData";
+import { BufferGeometry, DoubleSide, Float32BufferAttribute, Group, Line, MeshBasicMaterial } from "three";
 
-const GeoJson = memo(({ json, color = 0x000000  }) => {
-    const geometryGroup = useRef(new THREE.Group());
-    const materialsRef = useRef(null);
+const Layers = () => {
+  const {layers} = useData();
+
+  return layers.map(l=><GeoJson key={l.id} json={l.json} color={l.color} />)
+}
+
+const GeoJson = memo(({ json, color  }) => {
+    const geometryGroup = useRef(new Group());
+    const materialsRef = useRef(new MeshBasicMaterial({ side: DoubleSide, depthTest: true }));
     const {latLongToVector3} = useData();
 
     const initGeometry = () => {
@@ -22,15 +27,10 @@ const GeoJson = memo(({ json, color = 0x000000  }) => {
                 vertices.push(vertex.x, vertex.y, vertex.z);
               });
             });
-            const bufferGeo = new THREE.BufferGeometry();
-            bufferGeo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-            const geoMaterial = new THREE.MeshBasicMaterial({
-              color,
-              side: THREE.DoubleSide,
-              depthTest: true
-            });
-            const mesh = new THREE.Line(bufferGeo, geoMaterial);
-            mesh.userData = { feature }; // !!!
+            const bufferGeo = new BufferGeometry();
+            bufferGeo.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+            const mesh = new Line(bufferGeo, materialsRef.current);
+            mesh.userData = { feature }; 
             geometryGroup.current.add(mesh);
           });
         }
@@ -38,14 +38,14 @@ const GeoJson = memo(({ json, color = 0x000000  }) => {
     }
   
     useEffect(() => {
-      initGeometry();
+      if (json) initGeometry();
     }, [json]);
 
     useEffect(()=>{
-      if (color) materialsRef.current?.color.set(color)
+      if (color&&materialsRef.current) materialsRef.current.color.set(color)
     }, [color])
   
     if (json) return <primitive object={geometryGroup.current} />;
   })
 
-  export default GeoJson;
+  export default Layers;
