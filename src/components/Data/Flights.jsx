@@ -5,7 +5,7 @@ import { BufferAttribute, BufferGeometry, Matrix4, ShaderMaterial } from 'three'
 function Flights() {
   const meshRef = useRef();
   const pointsRef = useRef();
-  const { flightsData, allFlights, segments } = useData();
+  const { flightsData, allFlights, segments, darkmode, selectedAirport } = useData();
   const [visibleFlights, setVisibleFlights] = useState(new Set());
   const totalSegments = segments + 1;
 
@@ -15,16 +15,13 @@ function Flights() {
       const totalPoints = flightsData.length * totalSegments;
 
       const positions = new Float32Array(totalPoints * 3);
-      const colors = new Float32Array(totalPoints * 3);
       const opacities = new Float32Array(totalPoints).fill(0);
 
       flightsData.forEach((flight, i) => {
         positions.set(flight.positions, i * totalSegments * 3); 
-        colors.set(flight.colors, i * totalSegments * 3);
       });
 
       geometry.setAttribute('position', new BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new BufferAttribute(colors, 3));
       geometry.setAttribute('opacity', new BufferAttribute(opacities, 1));
 
       meshRef.current.geometry = geometry;
@@ -32,18 +29,17 @@ function Flights() {
     }
   }, [flightsData]);
 
-  const handlePointClick = (clicked) => {
-    // all flights with the same start or end
-    const flightsToShow = new Set();
-    flightsData.forEach((flight, i) => {
-      const start = flight.positions.slice(0, 3).join(',');
-      const end = flight.positions.slice(totalSegments*3-3, totalSegments*3).join(',');
-      if (start === clicked || end === clicked) {
-        flightsToShow.add(i);
-      }
-    });
-    setVisibleFlights(flightsToShow);
-  };
+  useEffect(()=>{
+    if (flightsData) {
+      const flightsToShow = new Set();
+      flightsData.forEach((flight, i) => {
+        if (flight.metadata.arrival.iata === selectedAirport.iata_code || flight.metadata.departure.iata === selectedAirport.iata_code) {
+          flightsToShow.add(i);
+        }
+      });
+      setVisibleFlights(flightsToShow);
+    }
+  },[selectedAirport])
 
   useEffect(() => {
     if (visibleFlights.size > 0) {
@@ -71,26 +67,40 @@ function Flights() {
     }
   }, [allFlights])
 
-  useEffect(() => {
-    if (flightsData) {
-      const pointPositions = new Float32Array(flightsData.length * 3);
-
+  useEffect(()=>{
+    if (flightsData&&meshRef.current) {
+      const colors = new Float32Array(flightsData.length * totalSegments * 3);
       flightsData.forEach((flight, i) => {
-        pointPositions[i * 3] = flight.positions[0];
-        pointPositions[i * 3 + 1] = flight.positions[1];
-        pointPositions[i * 3 + 2] = flight.positions[2];
+        for (let s = 0; s <= segments; s++) {
+          const index = (i * totalSegments + s) * 3;
+          const colorRatio = s / segments;
+          if (darkmode) {
+            // yellow-orange (dark)
+            colors[index] = 1.0; 
+            colors[index + 1] = 0.36 + 0.64 * colorRatio; 
+            colors[index + 2] = 0.0; 
+          } else {
+            // blue-violet (light)
+            colors[index] = 0.36 + 0.64 * colorRatio;
+            colors[index + 1] = 0.0; 
+            colors[index + 2] = 1.0; 
+          }
+        }
       });
-      pointsRef.current.instanceMatrix.needsUpdate = true;
-      for (let i = 0; i < flightsData.length; i++) {
-        const matrix = new Matrix4().setPosition(
-          pointPositions[i * 3],
-          pointPositions[i * 3 + 1],
-          pointPositions[i * 3 + 2]
-        );
-        pointsRef.current.setMatrixAt(i, matrix);
-      }
+      meshRef.current.geometry.setAttribute('color', new BufferAttribute(colors, 3));
+      meshRef.current.geometry.attributes.color.needsUpdate = true;
+    }
+  }, [darkmode, flightsData])
 
-      pointsRef.current.instanceMatrix.needsUpdate = true;
+  useEffect(() => {
+    if (flightsData&&pointsRef.current) {
+      const matrix = new Matrix4();
+        flightsData.forEach((flight, i) => {
+            const [x, y, z] = flight.positions;
+            matrix.setPosition(x, y, z);
+            pointsRef.current.setMatrixAt(i, matrix);
+        });
+        pointsRef.current.instanceMatrix.needsUpdate = true;
     }
   }, [flightsData]);
 
@@ -131,11 +141,6 @@ function Flights() {
       <instancedMesh
         ref={pointsRef}
         args={[null, null, flightsData.length]}
-        onClick={(e) => {
-          const instanceIndex = e.instanceId;
-          const clickedPosition = flightsData[instanceIndex].positions.slice(0, 3).join(',');
-          handlePointClick(clickedPosition);
-        }}
       >
         <sphereGeometry args={[0.0075, 16, 16]} />
         <meshBasicMaterial color="#e8c73f" />

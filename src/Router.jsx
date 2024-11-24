@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import Config from "./Config";
+import Configurator from "./Configurator";
 import Game from "./Game";
 import { SceneProvider } from "./hooks/useScene";
 import Data from "./Data";
@@ -10,9 +10,9 @@ const Router = createBrowserRouter([
     children: [{ path: "", element: <Game /> }],
   },
   {
-    path: "/config",
+    path: "/configurator",
     element: <SceneProvider />,
-    children: [{ path: "", element: <Config /> }],
+    children: [{ path: "", element: <Configurator /> }],
   },
   {
     path: "/data",
@@ -20,7 +20,7 @@ const Router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to='/config' />,
+    element: <Navigate to='/configurator' />,
   },
 ]);
 

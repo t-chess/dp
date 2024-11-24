@@ -50,25 +50,25 @@ export function Model(props) {
 
   useEffect(() => {
     if (mainColor?.color) {
-      carPaintMaterial.current.color.setHex(mainColor.color);
+      carPaintMaterial.current.color.set(mainColor.color);
     }
   }, [mainColor]);
 
   useEffect(() => {
     if (stripesColor?.color) {
-      stripesMaterial.current.color.setHex(stripesColor.color);
+      stripesMaterial.current.color.set(stripesColor.color);
     }
   }, [stripesColor]);
 
   useEffect(() => {
     if (seat==='leather') {
       textileMaterial.current.map = null;
-      textileMaterial.current.color.setHex(0x222222);
+      textileMaterial.current.color.set(0x222222);
       textileMaterial.current.roughnessMap = leather;
     } else {
       textileMaterial.current.map = fabric[0];
       textileMaterial.current.roughnessMap = fabric[1];
-      textileMaterial.current.color.setHex(0x333333);
+      textileMaterial.current.color.set(0x333333);
     }
   }, [seat]);
   

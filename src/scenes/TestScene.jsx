@@ -25,7 +25,7 @@ const TestScene = () => {
       ></directionalLight> */}
       <Physics debug>
         {/* <FixedGround /> */}
-        <ModelProvider src='/models/animal_crossing_map.glb' ref={mapRef}>
+        <ModelProvider src='/game/animal_crossing_map.glb' ref={mapRef}>
           <RigidBody type='fixed' colliders={"trimesh"}>
             <ModelPrimitive ref={mapRef} scale={20} position={[-15, -1, 10]} />
           </RigidBody>

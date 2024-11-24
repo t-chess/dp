@@ -2,17 +2,21 @@ import { useEffect, useState } from "react";
 import { useData } from "../../hooks/useData";
 
 const UI = () => {
-    const {selectedAirport, allFlights, setAllFlights, layers, setLayers} = useData();
+    const {selectedAirport, allFlights, setAllFlights, layers, setLayers, darkmode, setDarkmode} = useData();
 
     const [open,setOpen] = useState(false);
 
     const pushToLayers = (data) => {
-        setLayers(prev=>([...prev, {id:prev[prev.length-1]?.id+1||1, json:data, color:"#000000"}]))
+        setLayers(prev=>([...prev, {id:prev[prev.length-1]?.id+1||1, json:data, color:"#ffffff"}]))
     }
     const changeInfo = (id, data) => {
         setLayers(prev=>prev.map(layer=>
             layer.id===id ? {...layer, ...data} : layer
         ))
+    }
+
+    const deleteLayer = (id) => {
+        setLayers(prev=>prev.filter(l=>l.id!=id))
     }
 
     const loadFile = (e) => {
@@ -34,7 +38,7 @@ const UI = () => {
                     <input type='file' />
                     <button type="submit">OK</button>
                 </form></div>}
-                {open&&layers.map(layer=><LayerUI key={layer.id} {...layer} onChange={changeInfo} />)}
+                {open&&layers.map(layer=><LayerUI key={layer.id} {...layer} onChange={changeInfo} onDeleteLayer={()=>deleteLayer(layer.id)} />)}
             </div>
             {selectedAirport && (
                 <div className="selectedAirport">
@@ -46,6 +50,10 @@ const UI = () => {
             )}
             <div className="toggles">
                 <label>
+                    <input checked={darkmode} onChange={(e)=>setDarkmode(e.target.checked)} type="checkbox" />
+                    <span>Dark mode</span>
+                </label>
+                <label>
                     <input checked={allFlights} onChange={(e)=>setAllFlights(e.target.checked)} type="checkbox" />
                     <span>Show all flights</span>
                 </label>
@@ -54,7 +62,7 @@ const UI = () => {
     )
 }
 
-const LayerUI = ({id, name, color, onChange}) => {
+const LayerUI = ({id, name, color, onChange, onDeleteLayer}) => {
     const [edit, setEdit] = useState(false);
 
     const handleSubmit = (e) => {
@@ -69,6 +77,7 @@ const LayerUI = ({id, name, color, onChange}) => {
                 <h3>{name||`Layer ${id}`}</h3>
                 <p>Color: <span style={{backgroundColor:color}}></span></p>
                 <button onClick={()=>setEdit(true)}>Edit</button>
+                <button onClick={onDeleteLayer}>Delete</button>
             </div> :
             <form onSubmit={handleSubmit}>
                 <label>

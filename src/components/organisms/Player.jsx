@@ -44,7 +44,7 @@ const Player = ({ position = [0, 0.2, 0] }) => {
   });
 
   return (
-    <ModelProvider src='/models/boar.glb' ref={ref}>
+    <ModelProvider src='/game/boar.glb' ref={ref}>
       <AnimatedObject animation={animation}>
         <PhysicalObject
           rbRef={rbRef}

@@ -1,0 +1,119 @@
+{
+    "@context": {
+        "@vocab": "https://schema.org/",
+        "gr": "http://purl.org/goodrelations/v1#"
+    },
+    "@type": "Car",
+    "name": "Makigai Car",
+    "isRelatedTo": {
+        "@type": "CreativeWork",
+        "name": "Sketchfab Model",
+        "url": "https://skfb.ly/o6Z9U",
+        "creator": {
+            "@type": "Person",
+            "name": "EddyNL"
+        },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "datePublished": "2021-03-12"
+    },
+    "brand": {
+        "@type": "Brand",
+        "name": "Makigai"
+    },
+    "model": "MaiMai P126 (Cyberpunk 2077 Fan Art)",
+    "description": "A 3D interactive car model inspired by Cyberpunk 2077. Features glowing headlights and customizable body colors, stripes and seat materials.",
+    "url": "/config/maimai-transformed.glb",
+    "numberOfDoors": 2,
+    "seatingCapacity": 2,
+    "additionalProperty": [
+        {
+            "@type": "PropertyValue",
+            "name": "Body Color",
+            "value": [
+                "Blue",
+                "Silver",
+                "Black",
+                "Yellow"
+            ]
+        },
+        {
+            "@type": "PropertyValue",
+            "name": "Stripes Color",
+            "value": [
+                "White",
+                "Black",
+                "Blue",
+                "Hot pink"
+            ]
+        },
+        {
+            "@type": "PropertyValue",
+            "name": "Seat Material",
+            "value": [
+                "Leather",
+                "Fabric"
+            ]
+        },
+        {
+            "@type": "PropertyValue",
+            "name": "Wheel Type",
+            "value": "Rubber & Metallic Alloy"
+        },
+        {
+            "@type": "PropertyValue",
+            "name": "Solar Panels",
+            "value": "Included"
+        },
+        {
+            "@type": "PropertyValue",
+            "name": "Glowing Features",
+            "value": [
+                "Headlights",
+                "Roof Lights",
+                "Rear Lights"
+            ]
+        }
+    ],
+    "gr:hasMakeAndModel": {
+        "@type": "gr:ProductModel",
+        "gr:name": "MaiMai P126",
+        "gr:description": "A customizable car model with interactive 3D configuration."
+    },
+    "gr:hasFeature": [
+        {
+            "@type": "gr:QualitativeValue",
+            "gr:hasValue": "Rubber",
+            "gr:qualitativeProductOrServiceFeature": "Tires, Belts"
+        },
+        {
+            "@type": "gr:QualitativeValue",
+            "gr:hasValue": "Glass",
+            "gr:qualitativeProductOrServiceFeature": "Windows"
+        },
+        {
+            "@type": "gr:QualitativeValue",
+            "gr:hasValue": "Metallic Alloy",
+            "gr:qualitativeProductOrServiceFeature": "Wheels, Exhaust"
+        },
+        {
+            "@type": "gr:QualitativeValue",
+            "gr:hasValue": "Car Paint",
+            "gr:qualitativeProductOrServiceFeature": "Customizable Body"
+        },
+        {
+            "@type": "gr:QualitativeValue",
+            "gr:hasValue": "Stripes Paint",
+            "gr:qualitativeProductOrServiceFeature": "Customizable Stripes"
+        },
+        {
+            "@type": "gr:QualitativeValue",
+            "gr:hasValue": "Leather or Fabric",
+            "gr:qualitativeProductOrServiceFeature": "Seats"
+        }
+    ],
+    "potentialAction": {
+        "@type": "ViewAction",
+        "target": "/configurator",
+        "description": "Interact with the 3D car configurator to customize the car."
+    }
+}

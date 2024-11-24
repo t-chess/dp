@@ -3,17 +3,17 @@ import { CatmullRomCurve3, Color, QuadraticBezierCurve3, Vector3 } from "three";
 
 const DataContext = createContext();
 
-export const DataProvider = ({radius, children}) => {
+export const DataProvider = ({children}) => {
     const [layers, setLayers] = useState([]);
 
     const [allFlights, setAllFlights] = useState(false);
+    const [darkmode, setDarkmode] = useState(true);
 
     const [airports, setAirports] = useState();
     const [selectedAirport, setSelectedAirport] = useState(null); 
 
-    const color = new Color("#75123f");
-    const airportsColor = [color.r, color.g, color.b];
     const segments = 8;
+    const radius = 1;
 
 
     const [flights, setFlights] = useState();
@@ -38,6 +38,14 @@ export const DataProvider = ({radius, children}) => {
         return arcPoints;
     };
 
+    const hexToRGB = (hexColor) => {
+        const hex = parseInt(hexColor.slice(1), 16);
+        const r = ((hex >> 16) & 255) / 255; 
+        const g = ((hex >> 8) & 255) / 255; 
+        const b = (hex & 255) / 255; 
+        return [r, g, b];
+    };
+
     const fetchAirports = () => {
         fetch('/data/ALL_AIRPORTS.json')
             .then((response) => response.json())
@@ -57,7 +65,6 @@ export const DataProvider = ({radius, children}) => {
     const airportsData = useMemo(() => {
         if (airports) {
             const positions = new Float32Array(Object.keys(airports).length * 3);
-            const colors = new Float32Array(Object.keys(airports).length * 3); 
     
             const metadata = [];
     
@@ -70,17 +77,13 @@ export const DataProvider = ({radius, children}) => {
                 positions[index * 3 + 1] = vector.y;
                 positions[index * 3 + 2] = vector.z;
     
-                colors[index * 3] = airportsColor[0];
-                colors[index * 3 + 1] = airportsColor[1];  
-                colors[index * 3 + 2] = airportsColor[2];  
-    
                 metadata.push({
                     ...airport,
                     position: vector,
                 });
             });
     
-            return { positions, colors, metadata };
+            return { positions, metadata };
         }
         return null;
     }, [airports]);
@@ -98,35 +101,24 @@ export const DataProvider = ({radius, children}) => {
                 const departureAirport = airports[flight.departure.iata];
                 const arrivalAirport = airports[flight.arrival.iata];
                 if (!departureAirport || !arrivalAirport) return null;
-
                 const departurePos = latLongToVector3(departureAirport.latitude, departureAirport.longitude);
                 const arrivalPos = latLongToVector3(arrivalAirport.latitude, arrivalAirport.longitude);
                 const curvePoints = createCurve(departurePos, arrivalPos);
-
                 const positions = new Float32Array(curvePoints.length);
-                const colors = new Float32Array(curvePoints.length);
-
                 curvePoints.forEach((coord, index) => {
                     positions[index] = coord;
                 });
-                for (let s = 0; s <= segments; s++) {
-                    const colorRatio = s / segments;
-                    colors[s * 3] = 1.0; // Red remains fully intense at 1.0 for both colors
-                    colors[s * 3 + 1] = 0.36 + 0.64 * colorRatio; // Green goes from 0.36 to 1.0
-                    colors[s * 3 + 2] = 0.0; // Blue remains 0 to keep within the orange-yellow range
-                }
                 return {
                     positions,
-                    colors,
                     metadata: flight,
                 };
             }).filter(Boolean); 
     }, [flights]);
 
     const fetchBorders = () => {
-        fetch('/data/countries.geo.json')
+        fetch('/data/geojsons/world.geojson')
             .then((response) => response.json())
-            .then((data) => setLayers([{id:1, color: "#4f4f4f", name:'Countries', json:data}]))
+            .then((data) => setLayers([{id:1, color: "#4f4f4f", name:'World', json:data}]))
             .catch((error) => console.error("err in borders", error));
     }
 
@@ -140,7 +132,8 @@ export const DataProvider = ({radius, children}) => {
             fetchFlights();
         }
     },[airports])
-    return <DataContext.Provider value={{latLongToVector3, radius, layers, setLayers, flightsData, airportsData, selectedAirport, airportsColor, segments, setSelectedAirport, allFlights, setAllFlights}}>{children}</DataContext.Provider>
+
+    return <DataContext.Provider value={{latLongToVector3, hexToRGB, radius, layers, setLayers, flightsData, airportsData, selectedAirport, segments, setSelectedAirport, allFlights, setAllFlights, darkmode, setDarkmode}}>{children}</DataContext.Provider>
 }
 
 export const useData = () => {

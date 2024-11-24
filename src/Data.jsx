@@ -1,31 +1,24 @@
-import { Environment, OrbitControls, Stats } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useEffect, useState } from "react";
 import { DataProvider } from "./hooks/useData";
 import UI from "./components/Data/UI";
 import "./assets/Data.css";
 import Layers from "./components/Data/Layers";
 import Airports from "./components/Data/Airports";
 import Flights from "./components/Data/Flights";
+import Globe from "./components/Data/Globe";
 
 const Data = () => {
-  const radius = 1;
   return (
-    <DataProvider radius={radius}>
+    <DataProvider>
       <Canvas camera={{ position:[2,0,2], fov: 50 }}>
-        <group>
-          <mesh>
-            <sphereGeometry args={[radius, 64, 64]} />
-            <meshStandardMaterial color={0x222222} wireframe={false} />
-          </mesh>
-          <Layers />
-          <Airports />
-          <Flights />
-        </group>
+        <Globe />
+        <Layers />
+        <Airports />
+        <Flights />
         <Stats />
         <OrbitControls />
-        <ambientLight />
-        <color attach='background' args={["#1a060f"]} />
+        <ambientLight intensity={3} />
       </Canvas>
       <UI />
     </DataProvider>

@@ -17,17 +17,26 @@ const circleTexture = new CanvasTexture(canvas);
 
 function Airports() {
     const ref = useRef();
-    const { airportsData, setSelectedAirport, airportsColor } = useData();
+    const { airportsData, setSelectedAirport, hexToRGB } = useData();
     const { camera, mouse, raycaster, gl } = useThree();
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const pointSize = 0.015 * window.devicePixelRatio;
 
+    const airportsColor = hexToRGB("#75123f");
+
     useEffect(() => {
+        if (airportsData && !airportsData.colors) {
+            const colors = new Float32Array(airportsData.positions.length);
+            for (let i = 0; i < airportsData.positions.length / 3; i++) {
+                colors[i * 3] = airportsColor[0];
+                colors[i * 3 + 1] = airportsColor[1];
+                colors[i * 3 + 2] = airportsColor[2];
+            }
+            airportsData.colors = colors;
+        }
         if (airportsData && ref.current) {
-            ref.current.geometry.setAttribute(
-                'color',
-                new BufferAttribute(airportsData.colors, 3)
-            );
+            ref.current.geometry.setAttribute('color', new BufferAttribute(airportsData.colors, 3));
+            ref.current.geometry.attributes.color.needsUpdate = true;
         }
     }, [airportsData]);
 
@@ -83,7 +92,7 @@ function Airports() {
 
     const handleClick = () => {
         if (hoveredIndex !== null) {
-            setSelectedAirport(airportsData.metadata[hoveredIndex]);
+            setSelectedAirport({...airportsData.metadata[hoveredIndex]});
         }
     };
 
@@ -97,28 +106,28 @@ function Airports() {
         };
     }, [gl, handlePointerMove, handleClick]);
 
+    if (!airportsData || !airportsData.colors) {
+        return null; 
+    }
+
     return (
-        <>
-            {airportsData && (
-                <points ref={ref}>
-                    <bufferGeometry>
-                        <bufferAttribute
-                            attach="attributes-position"
-                            array={airportsData.positions}
-                            count={airportsData.positions.length / 3}
-                            itemSize={3}
-                        />
-                        <bufferAttribute
-                            attach="attributes-color"
-                            array={airportsData.colors}
-                            count={airportsData.colors.length / 3}
-                            itemSize={3}
-                        />
-                    </bufferGeometry>
-                    <pointsMaterial vertexColors map={circleTexture} size={pointSize} sizeAttenuation={true} transparent={true} alphaTest={0.5} />
-                </points>
-            )}
-        </>
+        <points ref={ref}>
+            <bufferGeometry>
+                <bufferAttribute
+                    attach="attributes-position"
+                    array={airportsData.positions}
+                    count={airportsData.positions.length / 3}
+                    itemSize={3}
+                />
+                <bufferAttribute
+                    attach="attributes-color"
+                    array={airportsData.colors}
+                    count={airportsData.colors.length / 3}
+                    itemSize={3}
+                />
+            </bufferGeometry>
+            <pointsMaterial vertexColors map={circleTexture} size={pointSize} sizeAttenuation={true} transparent={true} alphaTest={0.5} />
+        </points>
     );
 }
 
