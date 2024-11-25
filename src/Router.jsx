@@ -1,18 +1,15 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Configurator from "./Configurator";
 import Game from "./Game";
-import { SceneProvider } from "./hooks/useScene";
 import Data from "./Data";
 const Router = createBrowserRouter([
   {
     path: "/game",
-    element: <SceneProvider />,
-    children: [{ path: "", element: <Game /> }],
+    element: <Game />,
   },
   {
     path: "/configurator",
-    element: <SceneProvider />,
-    children: [{ path: "", element: <Configurator /> }],
+    element: <Configurator />
   },
   {
     path: "/data",

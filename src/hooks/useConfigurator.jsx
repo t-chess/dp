@@ -21,7 +21,7 @@ const seats = [
 
 const ConfiguratorContext = createContext({});
 
-export const ConfiguratorProvider = (props) => {
+export const ConfiguratorProvider = ({children}) => {
   const [wheels, setWheels] = useState(1);
   const [lights, setLights] = useState(true);
   const [mainColor, setMainColor] = useState(mainColors[0]);
@@ -41,7 +41,7 @@ export const ConfiguratorProvider = (props) => {
         mode, setMode
       }}
     >
-      {props.children}
+      {children}
     </ConfiguratorContext.Provider>
   );
 };

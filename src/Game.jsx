@@ -1,25 +1,27 @@
-import { KeyboardControls, OrbitControls, Stats } from "@react-three/drei";
+import { KeyboardControls, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useState } from "react";
-import { Perf } from "r3f-perf";
-import { useScene } from "./hooks/useScene";
-import StartScene from "./scenes/StartScene";
-import TestScene from "./scenes/TestScene";
+import { Physics } from "@react-three/rapier";
+import { Suspense } from "react";
+import Player from "./components/Game/Player";
+import Map from "./components/Game/Map";
+import Forest from "./components/Game/Forest";
+import Playground from "./components/Game/Playground";
 
 const Game = () => {
-  const { mode, skydomeRadius, FOV } = useScene();
   return (
     <KeyboardControls map={keyboardMap}>
-      <Canvas camera={{ position: [0.75, 1.5, 1.5], fov: FOV }} shadows>
+      <Canvas shadows>
         <Stats />
-        <axesHelper />
-        <gridHelper args={[1000, 1000, "white", "black"]} />
-        {/* <Perf /> */}
-        {mode === "static" && skydomeRadius && (
-          <OrbitControls maxDistance={skydomeRadius - 3} />
-        )}
-        {/* <StartScene /> */}
-        <TestScene />
+        <ambientLight intensity={1} />
+        <directionalLight />
+        <Suspense>
+          <Physics debug gravity={[0, -9.81, 0]}>
+            <Map />
+            <Playground />
+            {/* <Forest /> */}
+            <Player />
+          </Physics>
+        </Suspense>
       </Canvas>
     </KeyboardControls>
   );
@@ -27,12 +29,10 @@ const Game = () => {
 
 export default Game;
 
-// The X axis is red. The Y axis is green. The Z axis is blue.
-
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
   { name: "backward", keys: ["ArrowDown", "KeyS"] },
   { name: "left", keys: ["ArrowLeft", "KeyA"] },
   { name: "right", keys: ["ArrowRight", "KeyD"] },
-  { name: "run", keys: ["Shift"] },
+  { name: "jump", keys: ["Space"] }
 ];
