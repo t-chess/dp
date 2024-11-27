@@ -1,23 +1,22 @@
 import { useLoader } from "@react-three/fiber";
-import { RepeatWrapping, TextureLoader } from "three";
+import { MeshStandardMaterial, RepeatWrapping, TextureLoader } from "three";
 import { RigidBody } from "@react-three/rapier";
+import { useGLTF } from "@react-three/drei";
+import { useRef } from "react";
+import { useGame } from "../../hooks/useGame";
 
 const Map = () => {
-    const grass  = useLoader(TextureLoader, '/game/grass.png');
-    grass.wrapS=grass.wrapT=RepeatWrapping;
-    grass.repeat.set(100, 100);
-    
-    return (
-      <>
-        <RigidBody colliders="trimesh" type='fixed' restitution={0} receiveShadow >
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-              <planeGeometry args={[20, 20]} />
-              <meshStandardMaterial map={grass} />
-          </mesh>
-        </RigidBody>
-        <color attach='background' args={[0xADD8E6]} />
-        </>
-    )
+  const grassTexture  = useLoader(TextureLoader, '/game/grass.png');
+  grassTexture.wrapS=grassTexture.wrapT=RepeatWrapping;
+  grassTexture.repeat.set(100, 100);
+  const { nodes } = useGLTF('/game/terrain.glb')
+  const grass = new MeshStandardMaterial({map:grassTexture, toneMapped:false})
+  
+  return (
+    <RigidBody type='fixed' colliders="trimesh" restitution={0} friction={0.1} receiveShadow position={[-6,-7,3]} scale={[2,2,2]}>
+      <mesh geometry={nodes.Plane.geometry} material={grass} scale={10} receiveShadow />
+    </RigidBody>
+  )
 }
 
 export default Map;

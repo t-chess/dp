@@ -1,4 +1,4 @@
-import { useAnimations, useGLTF, useKeyboardControls } from "@react-three/drei";
+import { Html, useAnimations, useGLTF, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import {
   RigidBody,
@@ -6,6 +6,8 @@ import {
 } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 import ThirdPersonCamera from "./ThirdPersonCamera";
+import { Quaternion } from "three";
+import { useGame } from "../../hooks/useGame";
 
 const Player = () => {
   const ref = useRef();
@@ -15,31 +17,57 @@ const Player = () => {
   const [animation, setAnimation] = useState("Idle2");
   const [, get] = useKeyboardControls();
   const [grounded, setGrounded] = useState(true);
+  const {berries} = useGame();
+
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.25).play();
     return () => actions?.[animation]?.fadeOut(0.25);
   }, [animation]);
-  useFrame(() => {
+  
+  useFrame((state,delta) => {
     if (rbRef.current) {
       const velocity = rbRef.current.linvel();
-      let x = get().left ? 1 : get().right ? -1 : 0;
-      let z = get().forward ? 1 : get().backward ? -1 : 0;
-      if (x || z) { // pohyb
-        velocity.z = z * 1.5;
-        velocity.x = x * 1.5;
-        const direction = Math.round(Math.atan2(x, z) / (Math.PI / 4)) * (Math.PI / 4);
-        ref.current.rotation.y = direction;
-        setAnimation("Move1 (jump)");
+      let rotation = rbRef.current.rotation();
+      rotation = new Quaternion(
+        rotation.x,
+        rotation.y,
+        rotation.z,
+        rotation.w
+      );
+      if (get().left||get().right) {
+        const speed = get().left?1.5:-1.5;
+        const angle = new Quaternion().setFromAxisAngle(
+          { x: 0, y: 1, z: 0 },
+          speed*delta
+        );
+        rotation.multiply(angle);
+        rbRef.current.setRotation(rotation);
+      }
+      const forwardVector = {
+        x: -2 * (rotation.x * rotation.z + rotation.w * rotation.y),
+        z: -2 * (rotation.z * rotation.z + rotation.w * rotation.w - 0.5),
+      };
+      const length = Math.sqrt(forwardVector.x ** 2 + forwardVector.z ** 2);
+      forwardVector.x /= length;
+      forwardVector.z /= length;
+      if (get().forward) {
         rbRef.current.wakeUp();
+        const speed = 1.5 * (1 + berries / 8); 
+        rbRef.current.setLinvel({
+          x: forwardVector.x * speed,
+          y: velocity.y, 
+          z: forwardVector.z * speed,
+        });
+        setAnimation("Move1 (jump)");
       } else {
+        rbRef.current.setLinvel({ x: 0, y: velocity.y, z: 0 });
         setAnimation("Idle2");
       }
       if (get().jump&&grounded) { //skok
         rbRef.current.wakeUp();
-        rbRef.current.applyImpulse({ x: 0, y: 0.006 , z: 0 });
+        rbRef.current.applyImpulse({ x: 0, y: 0.006 * (1 + berries / 10) , z: 0 });
         setGrounded(false); 
       }
-      rbRef.current.setLinvel({ x: velocity.x, y: rbRef.current.linvel().y, z: velocity.z });
       if (rbRef.current.translation().y < -10) { 
         rbRef.current.setTranslation({ x: 0, y: 0.5, z: 0 }); //pad
       }
@@ -55,8 +83,10 @@ const Player = () => {
       name="player"
       onCollisionEnter={()=>setGrounded(true)}
       position={[0,2,0]}
+      scale={[1 + berries / 6,1 + berries / 6,1 + berries / 6]}
     >
-      <primitive ref={ref} object={scene} position={[0, -0.07, 0]} />
+      <primitive ref={ref} object={scene} position={[0, -0.07, 0]} castShadow receiveShadow rotation={[0,Math.PI,0]} />
+      <Html position={[0,1,0]} wrapperClass="berries">{berries}</Html>
       <RoundCuboidCollider args={[0.075, 0.03, 0.1, 0.1]} />
     </RigidBody>
     <ThirdPersonCamera target={rbRef} />
