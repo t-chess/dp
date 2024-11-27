@@ -25,8 +25,8 @@ const Player = () => {
       let x = get().left ? 1 : get().right ? -1 : 0;
       let z = get().forward ? 1 : get().backward ? -1 : 0;
       if (x || z) { // pohyb
-        velocity.z = z * 1.25;
-        velocity.x = x * 1.25;
+        velocity.z = z * 1.5;
+        velocity.x = x * 1.5;
         const direction = Math.round(Math.atan2(x, z) / (Math.PI / 4)) * (Math.PI / 4);
         ref.current.rotation.y = direction;
         setAnimation("Move1 (jump)");
@@ -40,6 +40,9 @@ const Player = () => {
         setGrounded(false); 
       }
       rbRef.current.setLinvel({ x: velocity.x, y: rbRef.current.linvel().y, z: velocity.z });
+      if (rbRef.current.translation().y < -10) { 
+        rbRef.current.setTranslation({ x: 0, y: 0.5, z: 0 }); //pad
+      }
     }
   });
   return (
@@ -47,9 +50,11 @@ const Player = () => {
     <RigidBody
       ref={rbRef}
       type='dynamic' lockRotations
-      friction={0.2} restitution={0}
+      friction={0.2} restitution={0.1}
       receiveShadow castShadow
+      name="player"
       onCollisionEnter={()=>setGrounded(true)}
+      position={[0,2,0]}
     >
       <primitive ref={ref} object={scene} position={[0, -0.07, 0]} />
       <RoundCuboidCollider args={[0.075, 0.03, 0.1, 0.1]} />
