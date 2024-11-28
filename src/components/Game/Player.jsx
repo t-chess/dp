@@ -7,7 +7,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import ThirdPersonCamera from "./ThirdPersonCamera";
 import { Quaternion } from "three";
-import { useGame } from "../../hooks/useGame";
+import { useGame } from "../../Game";
 
 const Player = () => {
   const ref = useRef();
@@ -28,12 +28,7 @@ const Player = () => {
     if (rbRef.current) {
       const velocity = rbRef.current.linvel();
       let rotation = rbRef.current.rotation();
-      rotation = new Quaternion(
-        rotation.x,
-        rotation.y,
-        rotation.z,
-        rotation.w
-      );
+      rotation = new Quaternion(rotation.x,rotation.y,rotation.z,rotation.w);
       if (get().left||get().right) {
         const speed = get().left?1.5:-1.5;
         const angle = new Quaternion().setFromAxisAngle(
@@ -63,13 +58,13 @@ const Player = () => {
         rbRef.current.setLinvel({ x: 0, y: velocity.y, z: 0 });
         setAnimation("Idle2");
       }
-      if (get().jump&&grounded) { //skok
+      if (get().jump&&grounded) {
         rbRef.current.wakeUp();
         rbRef.current.applyImpulse({ x: 0, y: 0.006 * (1 + berries / 10) , z: 0 });
         setGrounded(false); 
       }
       if (rbRef.current.translation().y < -10) { 
-        rbRef.current.setTranslation({ x: 0, y: 0.5, z: 0 }); //pad
+        rbRef.current.setTranslation({ x: 0, y: 0.5, z: 0 });
       }
     }
   });

@@ -1,9 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { Matrix4, Raycaster, Vector3 } from 'three';
-import { CylinderCollider, InstancedRigidBodies } from '@react-three/rapier';
-import { getRandomPositions } from '../../hooks/gameHelpers';
-import { useGame } from '../../hooks/useGame';
+import { Matrix4 } from 'three';
+import { InstancedRigidBodies } from '@react-three/rapier';
+import { useGame } from '../../Game';
+
+export const getRandomPositions = (count, radius, fixedY = false) => {
+  const positions = [];
+  for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2; 
+      const distance = Math.random() * radius; 
+      const x = Math.cos(angle) * distance; 
+      const z = Math.sin(angle) * distance;
+      const y = fixedY ? fixedY : Math.random() + 0.5;
+      positions.push([x, y, z]);
+  }
+  return positions;
+}
 
 
 export const Tree = ({type=1, positions=[]}) => {
@@ -63,7 +75,6 @@ export const Bush = ({positions=[]}) => {
   const leavesRef= useRef();
   const cherryRef = useRef();
   const barkRef = useRef();
-
   const picked = useRef(new Array(positions.length).fill(false));
 
   useEffect(() => {
@@ -77,17 +88,10 @@ export const Bush = ({positions=[]}) => {
     leavesRef.current.instanceMatrix.needsUpdate = true;
     barkRef.current.instanceMatrix.needsUpdate = true;
     cherryRef.current.instanceMatrix.needsUpdate = true;
-    if (leavesRef.current) {
-      leavesRef.current.frustumCulled = false;
-    }
-    if (barkRef.current) {
-      barkRef.current.frustumCulled = false;
-    }
-    if (cherryRef.current) {
-      cherryRef.current.frustumCulled = false;
-    }
+    if (leavesRef.current) leavesRef.current.frustumCulled = false;
+    if (barkRef.current) barkRef.current.frustumCulled = false;
+    if (cherryRef.current) cherryRef.current.frustumCulled = false;
   }, [positions]);
-
   const handleCollision = (index,rb) => {
     if (rb.name==='player'&&!picked.current[index]) {
       picked.current[index] = true;
@@ -95,10 +99,10 @@ export const Bush = ({positions=[]}) => {
       const hiddenMatrix = new Matrix4();
       hiddenMatrix.makeTranslation(0, -1000, 0);
       cherryRef.current.setMatrixAt(index, hiddenMatrix);
+      cherryRef.current.updateMatrix();
       cherryRef.current.instanceMatrix.needsUpdate = true;
     }
   };
-
   return (
     <group>
       <InstancedRigidBodies

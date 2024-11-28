@@ -1,4 +1,3 @@
-import { useGame } from "../../hooks/useGame";
 import { Bush, Rocks, Tree } from "./NatureAssets";
 
 const Forest = () => {

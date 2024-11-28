@@ -7,7 +7,6 @@ const ThirdPersonCamera = ({ target }) => {
   const targetOffset = new Vector3(0, 1, 0); 
   const desiredPosition = new Vector3();
   const lookAtPosition = new Vector3();
-
   useFrame(() => {
     if (target.current) {
       const playerPosition = target.current.translation();
@@ -27,5 +26,4 @@ const ThirdPersonCamera = ({ target }) => {
   });
   return null;
 };
-
 export default ThirdPersonCamera;
