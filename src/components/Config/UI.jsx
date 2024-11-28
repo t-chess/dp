@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useConfigurator } from "../../hooks/useConfigurator";
 
-const UI = () => {
+const UI = ({zoomin,zoomout,rotate}) => {
   const {
     mainColors, mainColor, setMainColor,
     stripesColors, stripesColor, setStripesColor,
@@ -85,6 +85,11 @@ const UI = () => {
           </div>
         </div>
       </>}
+      <div className="keybuttons">
+        <button onClick={zoomin}>Zoom in</button>
+        <button onClick={zoomout}>Zoom out</button>
+        <button onClick={rotate}>Rotate model</button>
+      </div>
     </div>
   )
 }

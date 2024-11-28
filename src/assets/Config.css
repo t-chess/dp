@@ -99,3 +99,9 @@ a.configurator__section__title {
 .item.item--active .item__label {
   color: white;
 }
+
+.keybuttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}

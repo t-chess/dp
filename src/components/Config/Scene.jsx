@@ -3,12 +3,17 @@ import { Suspense, useRef, useState } from "react";
 import { Model } from "./Model";
 import { Bloom, EffectComposer, Noise } from "@react-three/postprocessing";
 import { useFrame } from "@react-three/fiber";
+import { A11y } from "@react-three/a11y";
+
+const description = "A 3D interactive car model inspired by Cyberpunk 2077. Features glowing headlights and customizable body colors, stripes and seat materials.";
 
 const Scene = ({scale}) => {
   return (
     <group position={[0, -1*scale, 0]} scale={scale}>
         <Suspense fallback={<FallbackBox />}>
-            <Model position={[0.5*scale, 0, 0]} rotation={[0, -Math.PI / 8, 0]} />
+            <A11y role="content" description={description}>
+              <Model position={[0.5*scale, 0, 0]} rotation={[0, -Math.PI / 8, 0]} />
+            </A11y>
         </Suspense>
 
         <mesh rotation={[Math.PI / 2, 0, 0]} position={[0.4, 0.01, 0.4]}>
