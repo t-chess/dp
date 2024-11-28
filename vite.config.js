@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
   const publicDir = path.resolve(__dirname, 'public', env.VITE_NODE_TYPE);
 
   return {
+    base: '', 
     publicDir,
     build: {
       outDir: outputDir,
