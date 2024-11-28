@@ -9,6 +9,7 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { Euler, LoopOnce, Matrix4, MeshPhysicalMaterial, MeshStandardMaterial, Quaternion, RepeatWrapping, TextureLoader, Vector3 } from 'three'
 import { useConfigurator } from '../../hooks/useConfigurator';
 import { useLoader } from '@react-three/fiber';
+import { baseURL } from '../../main';
 
 const rubberMaterial = new MeshStandardMaterial({ color: 0x222222, roughness: 0.9, metalness:0.7 });
 const glassMaterial = new MeshPhysicalMaterial({color: 0x222222,metalness: .9,roughness: .1,envMapIntensity: 0.9,clearcoat: 1,transparent: true,opacity: .6,reflectivity: 0.25,ior: 0.9,})
@@ -20,29 +21,29 @@ const glowRedMaterial = new MeshStandardMaterial({color:0xff4c4c,emissive: 0xff4
 
 export function Model(props) {
   const group = React.useRef()
-  const { nodes, animations } = useGLTF('/public/config/maimai-transformed.glb')
+  const { nodes, animations } = useGLTF(`${baseURL}config/maimai-transformed.glb`)
   const { actions } = useAnimations(animations, group)
 
   // glowing
   const glowMaterial = useRef(new MeshStandardMaterial({color:0xFFD17D,emissive: 0xFFD17D,emissiveIntensity: 1,roughness: 0.5,metalness: 0.3,toneMapped:false}));
   
   // metallic materials
-  const color  = useLoader(TextureLoader, ['/config/color_color.jpg', '/config/color_roughness.jpg'])
+  const color  = useLoader(TextureLoader, [baseURL+'config/color_color.jpg', baseURL+'config/color_roughness.jpg'])
   color.forEach(m=>{m.wrapS=m.wrapT=RepeatWrapping;m.repeat.set(5,5)})
   const metalMaterial = new MeshPhysicalMaterial({ color: 0x888888, map:color[0],roughnessMap:color[1], metalness: 1,clearcoat: 1, reflectivity: 0.9 });
   const carPaintMaterial = useRef(new MeshPhysicalMaterial({ map:color[0],roughnessMap:color[1], metalness: 0.9,clearcoat: 1 }));
   const stripesMaterial = useRef(new MeshPhysicalMaterial({ map:color[0],roughnessMap:color[1], metalness: 0.9,clearcoat: 1 }));
 
   // solar panels material
-  const solar  = useLoader(TextureLoader, '/config/solar_color.jpg')
+  const solar  = useLoader(TextureLoader, baseURL+'config/solar_color.jpg')
   solar.wrapS = solar.wrapT = RepeatWrapping;
   solar.repeat.set(16, 16);
   const solarMaterial = new MeshStandardMaterial({ color: 0x4e575e,map:solar, roughness: 0.5, metalness: 0.9 });
 
   // insides materials
-  const leather  = useLoader(TextureLoader, '/config/leather_roughness.jpg')
+  const leather  = useLoader(TextureLoader, baseURL+'config/leather_roughness.jpg')
   leather.wrapS=leather.wrapT=RepeatWrapping;leather.repeat.set(8,8);
-  const fabric  = useLoader(TextureLoader, ['/config/fabric_color.jpg','/config/fabric_roughness.jpg','/config/fabric_displacement.jpg'])
+  const fabric  = useLoader(TextureLoader, [baseURL+'config/fabric_color.jpg',baseURL+'config/fabric_roughness.jpg',baseURL+'config/fabric_displacement.jpg'])
   fabric.forEach(f=>{f.wrapS=f.wrapT=RepeatWrapping;f.repeat.set(10,10);})
   const textileMaterial = useRef(new MeshPhysicalMaterial({ color:0x222222,roughnessMap:leather,roughness: 0.9 }));
   
@@ -268,4 +269,3 @@ export function Model(props) {
   )
 }
 
-useGLTF.preload('/public/config/maimai-transformed.glb')

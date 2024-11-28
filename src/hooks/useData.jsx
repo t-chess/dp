@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { CatmullRomCurve3, Color, QuadraticBezierCurve3, Vector3 } from "three";
+import { baseURL } from "../main";
 
 const DataContext = createContext();
 
@@ -47,7 +48,7 @@ export const DataProvider = ({children}) => {
     };
 
     const fetchAirports = () => {
-        fetch('/data/ALL_AIRPORTS.json')
+        fetch(baseURL+'data/ALL_AIRPORTS.json')
             .then((response) => response.json())
             .then((data) => {
                 const airportLocations = data.reduce((acc, airport) => {
@@ -89,7 +90,7 @@ export const DataProvider = ({children}) => {
     }, [airports]);
 
     const fetchFlights = () => {
-        fetch('/data/UNIQUE_FLIGHTS.json')
+        fetch(baseURL+'data/UNIQUE_FLIGHTS.json')
             .then((response) => response.json())
             .then((data) => setFlights(data))
             .catch((error) => console.error("Error fetching flights:", error));
@@ -116,7 +117,7 @@ export const DataProvider = ({children}) => {
     }, [flights]);
 
     const fetchBorders = () => {
-        fetch('/data/geojsons/world.geojson')
+        fetch(baseURL+'data/geojsons/world.geojson')
             .then((response) => response.json())
             .then((data) => setLayers([{id:1, color: "#4f4f4f", name:'World', json:data}]))
             .catch((error) => console.error("err in borders", error));

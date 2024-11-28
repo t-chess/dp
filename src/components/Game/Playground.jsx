@@ -3,6 +3,7 @@ import { BoxGeometry, MeshStandardMaterial, RepeatWrapping, TextureLoader } from
 import { useLoader } from "@react-three/fiber";
 import { InstancedRigidBodies, RigidBody } from "@react-three/rapier";
 import { useEffect, useRef } from "react";
+import { baseURL } from "../../main";
 
 const Playground = () => {
     return (
@@ -47,7 +48,7 @@ const Playground = () => {
 
 const WoodenBoxInstances = ({args=[0.25,0.25,0.25], count, radius = 2}) => {
     const meshRef = useRef();
-    const planks  = useLoader(TextureLoader, '/game/planks.png');
+    const planks  = useLoader(TextureLoader, baseURL+'game/planks.png');
     planks.wrapS=planks.wrapT=RepeatWrapping;
     planks.repeat.set(5, 5);
     const positions = getRandomPositions(count, radius);

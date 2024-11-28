@@ -3,13 +3,14 @@ import { MeshStandardMaterial, RepeatWrapping, TextureLoader } from "three";
 import { RigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
 import { sRGBEncoding } from "@react-three/drei/helpers/deprecated";
+import { baseURL } from "../../main";
 
 const Map = () => {
-  const grassTexture  = useLoader(TextureLoader, '/game/grass.png');
+  const grassTexture  = useLoader(TextureLoader, baseURL+'game/grass.png');
   grassTexture.wrapS=grassTexture.wrapT=RepeatWrapping;
   grassTexture.repeat.set(100, 100);
   grassTexture.encoding = sRGBEncoding;
-  const { nodes } = useGLTF('/game/terrain.glb')
+  const { nodes } = useGLTF(baseURL+'game/terrain.glb')
   const grass = new MeshStandardMaterial({color:"#e3ffb9",map:grassTexture})
   
   return (

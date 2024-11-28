@@ -8,10 +8,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const outputDir = env.VITE_NODE_TYPE ? `build-${env.VITE_NODE_TYPE}` : 'build';
-  const publicDir = path.resolve(__dirname, 'public', env.VITE_NODE_TYPE);
+  const publicDir = mode==="development"?"public":path.resolve(__dirname, 'public', env.VITE_NODE_TYPE);
 
   return {
-    base: '', 
+    base: mode==="development"?'/':'', 
     publicDir,
     build: {
       outDir: outputDir,

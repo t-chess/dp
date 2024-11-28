@@ -8,11 +8,12 @@ import { useEffect, useRef, useState } from "react";
 import ThirdPersonCamera from "./ThirdPersonCamera";
 import { Quaternion } from "three";
 import { useGame } from "../../Game";
+import { baseURL } from "../../main";
 
 const Player = () => {
   const ref = useRef();
   const rbRef = useRef();
-  const { animations, scene } = useGLTF('/game/boar.glb');
+  const { animations, scene } = useGLTF(baseURL+'game/boar.glb');
   const { actions } = useAnimations(animations, ref);
   const [animation, setAnimation] = useState("Idle2");
   const [, get] = useKeyboardControls();

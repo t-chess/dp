@@ -3,6 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { Matrix4 } from 'three';
 import { InstancedRigidBodies } from '@react-three/rapier';
 import { useGame } from '../../Game';
+import { baseURL } from '../../main';
 
 export const getRandomPositions = (count, radius, fixedY = false) => {
   const positions = [];
@@ -19,7 +20,7 @@ export const getRandomPositions = (count, radius, fixedY = false) => {
 
 
 export const Tree = ({type=1, positions=[]}) => {
-  const { nodes, materials } = useGLTF('/game/nature-transformed.glb')
+  const { nodes, materials } = useGLTF(baseURL+'game/nature-transformed.glb')
   const leavesRef = useRef();
   const barkRef = useRef();
   const geometries = [
@@ -70,7 +71,7 @@ export const Tree = ({type=1, positions=[]}) => {
 }
 
 export const Bush = ({positions=[]}) => {
-  const { nodes, materials } = useGLTF('/game/nature-transformed.glb');
+  const { nodes, materials } = useGLTF(baseURL+'game/nature-transformed.glb');
   const {setBerries} = useGame();
   const leavesRef= useRef();
   const cherryRef = useRef();
@@ -125,14 +126,14 @@ export const Bush = ({positions=[]}) => {
 }
 
 export const Trunk = (props) => {
-  const { nodes, materials } = useGLTF('/game/nature-transformed.glb')
+  const { nodes, materials } = useGLTF(baseURL+'game/nature-transformed.glb')
   return (
     <mesh geometry={nodes.trunk.geometry} material={materials.bark} position={[2.984, 0.789, -76.637]} rotation={[3.112, -0.097, 1.468]} />
   )
 }
 
 export const Rocks = ({type=1, count=1, radius=3, position}) => {
-    const { nodes, materials } = useGLTF('/game/nature-transformed.glb')
+    const { nodes, materials } = useGLTF(baseURL+'game/nature-transformed.glb')
     const ref = useRef();
 
     const positions = getRandomPositions(count, radius);
