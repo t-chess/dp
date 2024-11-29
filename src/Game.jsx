@@ -5,6 +5,8 @@ import { createContext, Suspense, useContext, useState } from "react";
 import Player from "./components/Game/Player";
 import Map from "./components/Game/Map";
 import Forest from "./components/Game/Forest";
+import Controls from "./components/Game/Controls";
+import "./assets/Game.css"
 
 const GameContext = createContext();
 export const useGame = () => {
@@ -33,6 +35,7 @@ const Game = () => {
             </Physics>
           </Suspense>
         </Canvas>
+        <Controls />
       </GameProvider>
     </KeyboardControls>
   );
@@ -42,7 +45,6 @@ export default Game;
 
 export const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
-  { name: "backward", keys: ["ArrowDown", "KeyS"] },
   { name: "left", keys: ["ArrowLeft", "KeyA"] },
   { name: "right", keys: ["ArrowRight", "KeyD"] },
   { name: "jump", keys: ["Space"] }

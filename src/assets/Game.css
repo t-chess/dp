@@ -1,0 +1,51 @@
+.berries div {
+    background-color: white;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls {
+    position: fixed;
+    width: 100%;
+    bottom: 20px;
+    left: 0;
+    padding: 0 20px 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.controls_wasd {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    touch-action: none;
+}
+
+.joystick {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.controls_jump {
+    width: 100px;
+    border: none;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    font-size: 16px;
+    color: #000;
+}
