@@ -23,7 +23,7 @@ const Game = () => {
     <KeyboardControls map={keyboardMap}>
       <GameProvider>
         <Canvas shadows>
-          <Stats />
+          {/* <Stats /> */}
           <color attach='background' args={[0xADD8E6]} />
           <ambientLight intensity={1} />
           <directionalLight castShadow position={[10, 10, 10]} intensity={1} />
@@ -35,7 +35,7 @@ const Game = () => {
             </Physics>
           </Suspense>
         </Canvas>
-        <Controls />
+        {window.innerWidth<900&&<Controls />}
       </GameProvider>
     </KeyboardControls>
   );
