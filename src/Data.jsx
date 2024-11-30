@@ -7,7 +7,6 @@ import Layers from "./components/Data/Layers";
 import Airports from "./components/Data/Airports";
 import Flights from "./components/Data/Flights";
 import Globe from "./components/Data/Globe";
-import { A11yAnnouncer } from "@react-three/a11y";
 
 const Data = () => {
   return (
@@ -20,7 +19,6 @@ const Data = () => {
         {/* <Stats /> */}
         <ambientLight intensity={3} />
       </Canvas>
-      <A11yAnnouncer />
       <UI />
     </DataProvider>
   );
