@@ -4,6 +4,7 @@ import { RigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
 import { sRGBEncoding } from "@react-three/drei/helpers/deprecated";
 import { baseURL } from "../../main";
+import { A11y } from "@react-three/a11y";
 
 const Map = () => {
   const grassTexture  = useLoader(TextureLoader, baseURL+'game/grass.png');
@@ -14,9 +15,11 @@ const Map = () => {
   const grass = new MeshStandardMaterial({color:"#e3ffb9",map:grassTexture})
   
   return (
-    <RigidBody type='fixed' colliders="trimesh" restitution={0} friction={0.1} receiveShadow position={[-6,-7,3]} scale={[2,2,2]}>
-      <mesh geometry={nodes.Plane.geometry} material={grass} scale={10} receiveShadow />
-    </RigidBody>
+    <A11y type="content" description="Map with trees, berry bushes and stones">
+      <RigidBody type='fixed' colliders="trimesh" restitution={0} friction={0.1} receiveShadow position={[-6,-7,3]} scale={[2,2,2]}>
+        <mesh geometry={nodes.Plane.geometry} material={grass} scale={10} receiveShadow />
+      </RigidBody>
+    </A11y>
   )
 }
 

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useData } from '../../hooks/useData';
 import { BufferAttribute, BufferGeometry, Matrix4, ShaderMaterial } from 'three';
+import { A11y } from '@react-three/a11y';
 
 function Flights() {
   const meshRef = useRef();
@@ -30,7 +31,7 @@ function Flights() {
   }, [flightsData]);
 
   useEffect(()=>{
-    if (flightsData) {
+    if (flightsData&&selectedAirport) {
       const flightsToShow = new Set();
       flightsData.forEach((flight, i) => {
         if (flight.metadata.arrival.iata === selectedAirport.iata_code || flight.metadata.departure.iata === selectedAirport.iata_code) {
@@ -133,19 +134,21 @@ function Flights() {
 
 
   if (flightsData) return (
-    <group>
-      <lineSegments ref={meshRef} material={lineMaterial}>
-        <bufferGeometry attach="geometry" />
-      </lineSegments>
+    <A11y role="content" description="Aktivní lety mezi letišti">
+      <group>
+        <lineSegments ref={meshRef} material={lineMaterial}>
+          <bufferGeometry attach="geometry" />
+        </lineSegments>
 
-      <instancedMesh
-        ref={pointsRef}
-        args={[null, null, flightsData.length]}
-      >
-        <sphereGeometry args={[0.0075, 16, 16]} />
-        <meshBasicMaterial color="#e8c73f" />
-      </instancedMesh>
-    </group>
+        <instancedMesh
+          ref={pointsRef}
+          args={[null, null, flightsData.length]}
+        >
+          <sphereGeometry args={[0.0075, 16, 16]} />
+          <meshBasicMaterial color="#e8c73f" />
+        </instancedMesh>
+      </group>
+    </A11y>
   );
 }
 

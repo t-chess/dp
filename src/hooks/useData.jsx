@@ -9,6 +9,7 @@ export const DataProvider = ({children}) => {
 
     const [allFlights, setAllFlights] = useState(false);
     const [darkmode, setDarkmode] = useState(true);
+    const [autoRotate, setAutoRotate] = useState(false);
 
     const [airports, setAirports] = useState();
     const [selectedAirport, setSelectedAirport] = useState(null); 
@@ -134,7 +135,7 @@ export const DataProvider = ({children}) => {
         }
     },[airports])
 
-    return <DataContext.Provider value={{latLongToVector3, hexToRGB, radius, layers, setLayers, flightsData, airportsData, selectedAirport, segments, setSelectedAirport, allFlights, setAllFlights, darkmode, setDarkmode}}>{children}</DataContext.Provider>
+    return <DataContext.Provider value={{latLongToVector3, hexToRGB, radius, layers, setLayers, flightsData, airportsData, selectedAirport, segments, setSelectedAirport, allFlights, setAllFlights, darkmode, setDarkmode, autoRotate, setAutoRotate}}>{children}</DataContext.Provider>
 }
 
 export const useData = () => {

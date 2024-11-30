@@ -9,6 +9,7 @@ import ThirdPersonCamera from "./ThirdPersonCamera";
 import { Quaternion } from "three";
 import { useGame } from "../../Game";
 import { baseURL } from "../../main";
+import { A11y } from "@react-three/a11y";
 
 const Player = () => {
   const ref = useRef();
@@ -61,6 +62,7 @@ const Player = () => {
       }
       if (get().jump&&grounded) {
         rbRef.current.wakeUp();
+        rbRef.current.setLinvel({ x: velocity.x, y: 0, z: velocity.z });
         rbRef.current.applyImpulse({ x: 0, y: 0.006 * (1 + berries / 10) , z: 0 });
         setGrounded(false); 
       }
@@ -71,20 +73,22 @@ const Player = () => {
   });
   return (
     <>
-    <RigidBody
-      ref={rbRef}
-      type='dynamic' lockRotations
-      friction={0.2} restitution={0.1}
-      receiveShadow castShadow
-      name="player"
-      onCollisionEnter={()=>setGrounded(true)}
-      position={[0,2,0]}
-      scale={[1 + berries / 6,1 + berries / 6,1 + berries / 6]}
-    >
-      <primitive ref={ref} object={scene} position={[0, -0.07, 0]} castShadow receiveShadow rotation={[0,Math.PI,0]} />
-      <Html position={[0,1,0]} wrapperClass="berries">{berries}</Html>
-      <RoundCuboidCollider args={[0.075, 0.03, 0.1, 0.1]} />
-    </RigidBody>
+    <A11y type="content" description="Player character (boar)">
+      <RigidBody
+        ref={rbRef}
+        type='dynamic' lockRotations
+        friction={0.2} restitution={0.1}
+        receiveShadow castShadow
+        name="player"
+        onCollisionEnter={()=>setGrounded(true)}
+        position={[0,2,0]}
+        scale={[1 + berries / 6,1 + berries / 6,1 + berries / 6]}
+      >
+        <primitive ref={ref} object={scene} position={[0, -0.07, 0]} castShadow receiveShadow rotation={[0,Math.PI,0]} />
+        <Html position={[0,1,0]} wrapperClass="berries"><span aria-label="Berries counter">{berries}</span></Html>
+        <RoundCuboidCollider args={[0.075, 0.03, 0.1, 0.1]} />
+      </RigidBody>
+    </A11y>
     <ThirdPersonCamera target={rbRef} />
     </>
   );

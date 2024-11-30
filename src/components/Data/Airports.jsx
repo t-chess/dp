@@ -3,6 +3,7 @@ import { useData } from '../../hooks/useData';
 import { useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import {BufferAttribute, CanvasTexture, Vector3} from 'three';
+import { A11y } from '@react-three/a11y';
 
 const canvas = document.createElement("canvas");
 canvas.width = 20;
@@ -111,23 +112,25 @@ function Airports() {
     }
 
     return (
-        <points ref={ref}>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    array={airportsData.positions}
-                    count={airportsData.positions.length / 3}
-                    itemSize={3}
-                />
-                <bufferAttribute
-                    attach="attributes-color"
-                    array={airportsData.colors}
-                    count={airportsData.colors.length / 3}
-                    itemSize={3}
-                />
-            </bufferGeometry>
-            <pointsMaterial vertexColors map={circleTexture} size={pointSize} sizeAttenuation={true} transparent={true} alphaTest={0.5} />
-        </points>
+        <A11y role="content" description="Body reprezentující letiště">
+            <points ref={ref}>
+                <bufferGeometry>
+                    <bufferAttribute
+                        attach="attributes-position"
+                        array={airportsData.positions}
+                        count={airportsData.positions.length / 3}
+                        itemSize={3}
+                    />
+                    <bufferAttribute
+                        attach="attributes-color"
+                        array={airportsData.colors}
+                        count={airportsData.colors.length / 3}
+                        itemSize={3}
+                    />
+                </bufferGeometry>
+                <pointsMaterial vertexColors map={circleTexture} size={pointSize} sizeAttenuation={true} transparent={true} alphaTest={0.5} />
+            </points>
+        </A11y>
     );
 }
 

@@ -19,7 +19,8 @@
     overflow-y: auto;
 }
 
-.layers button.toggle {
+.layers button.toggle,
+.toggles button {
     all: unset;
     cursor: pointer;
     display: block;
@@ -71,15 +72,26 @@
 .selectedAirport {
     left: 1rem;
     bottom: 1rem;
+    max-width: calc(100% - 6rem);
 }
 
 .toggles {
     bottom: 1rem;
     right: 1rem;
+    display: flex;
+    min-height: 140px;
+    align-items: center;
 }
 
 .toggles label {
     display: flex;
     gap: 1rem;
     padding: 0.5rem 0;
+    padding-right: 2rem;
+}
+
+.toggles button {
+    padding: 0;
+    text-align: center;
+    writing-mode: vertical-rl;
 }

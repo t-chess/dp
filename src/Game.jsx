@@ -5,7 +5,7 @@ import { createContext, Suspense, useContext, useState } from "react";
 import Player from "./components/Game/Player";
 import Map from "./components/Game/Map";
 import Forest from "./components/Game/Forest";
-import Controls from "./components/Game/Controls";
+import TouchControls from "./components/Game/TouchControls";
 import "./assets/Game.css"
 
 const GameContext = createContext();
@@ -28,14 +28,14 @@ const Game = () => {
           <ambientLight intensity={1} />
           <directionalLight castShadow position={[10, 10, 10]} intensity={1} />
           <Suspense>
-            <Physics  gravity={[0, -9.81, 0]}>
+            <Physics debug gravity={[0, -9.81, 0]}>
               <Map />
               <Forest />
               <Player />
             </Physics>
           </Suspense>
         </Canvas>
-        {window.innerWidth<900&&<Controls />}
+        {window.innerWidth<900&&<TouchControls />}
       </GameProvider>
     </KeyboardControls>
   );

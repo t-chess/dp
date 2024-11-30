@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-const Controls = () => {
+const TouchControls = () => {
     const [joystickActive, setJoystickActive] = useState(false);
     const joystickRef = useRef(null);
     const [joystickPosition, setJoystickPosition] = useState({ x: 0, y: 0 });
@@ -75,4 +75,4 @@ const Controls = () => {
     )
 }
 
-export default Controls;
+export default TouchControls;

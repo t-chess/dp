@@ -2,9 +2,25 @@ import { useEffect, useState } from "react";
 import { useData } from "../../hooks/useData";
 
 const UI = () => {
-    const {selectedAirport, allFlights, setAllFlights, layers, setLayers, darkmode, setDarkmode} = useData();
+    const {selectedAirport, setSelectedAirport,allFlights, setAllFlights, layers, setLayers, darkmode, setDarkmode, autoRotate, setAutoRotate} = useData();
 
     const [open,setOpen] = useState(false);
+    const [toggles,setToggles] = useState(window.innerWidth>=550);
+
+    useEffect(()=>{
+        if (window.innerWidth<550) {
+            if (selectedAirport) {
+                setToggles(false);
+            }
+        }
+    }, [selectedAirport])
+    useEffect(()=>{
+        if (window.innerWidth<550) {
+            if (toggles) {
+                setSelectedAirport(null)
+            }
+        }
+    }, [toggles])
 
     const pushToLayers = (data) => {
         setLayers(prev=>([...prev, {id:prev[prev.length-1]?.id+1||1, json:data, color:"#ffffff"}]))
@@ -49,7 +65,7 @@ const UI = () => {
                 </div>
             )}
             <div className="toggles">
-                <label>
+                {toggles&&<div><label>
                     <input checked={darkmode} onChange={(e)=>setDarkmode(e.target.checked)} type="checkbox" />
                     <span>Dark mode</span>
                 </label>
@@ -57,6 +73,11 @@ const UI = () => {
                     <input checked={allFlights} onChange={(e)=>setAllFlights(e.target.checked)} type="checkbox" />
                     <span>Show all flights</span>
                 </label>
+                <label>
+                    <input checked={autoRotate} onChange={(e)=>setAutoRotate(e.target.checked)} type="checkbox" />
+                    <span>Autorotate</span>
+                </label></div>}
+                <button onClick={()=>setToggles(!toggles)}>Toggles</button>
             </div>
         </>
     )
