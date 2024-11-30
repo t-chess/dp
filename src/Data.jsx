@@ -12,7 +12,7 @@ import { A11yAnnouncer } from "@react-three/a11y";
 const Data = () => {
   return (
     <DataProvider>
-      <Canvas camera={{ position:[2,0,2], fov: 50 }} fallback={"Sorry no WebGL supported!"} >
+      <Canvas camera={{ position:[2,0,2], fov: 50 }} fallback={"GeoJSON and aviation data visualisation tool, usable only with WebGL support"} >
         <Globe />
         <Layers />
         <Airports />

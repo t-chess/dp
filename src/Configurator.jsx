@@ -22,7 +22,7 @@ const Configurator = () => {
   };
   return (
     <ConfiguratorProvider>
-      <Canvas camera={{ position:[-3, 1, -5], fov: 50 }} dpr={1} fallback={"Sorry no WebGL supported!"}>
+      <Canvas camera={{ position:[-3, 1, -5], fov: 50 }} dpr={1} fallback={"3D car configurator, usable only with WebGL support."}>
         <color attach='background' args={["#121212"]} />
         <A11y role="content" description="Interactive 3D scene with black background, glowing decoration and car 3D model." >
           <Scene scale={scaleFactor} />

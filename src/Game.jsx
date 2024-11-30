@@ -22,7 +22,7 @@ const Game = () => {
   return (
     <KeyboardControls map={keyboardMap}>
       <GameProvider>
-        <Canvas shadows>
+        <Canvas shadows fallback={"Simple demo game with wild boar model eating berries, usable with WebGL support"} >
           {/* <Stats /> */}
           <color attach='background' args={[0xADD8E6]} />
           <ambientLight intensity={1} />
