@@ -28,7 +28,7 @@ const Game = () => {
           <ambientLight intensity={1} />
           <directionalLight castShadow position={[10, 10, 10]} intensity={1} />
           <Suspense>
-            <Physics debug gravity={[0, -9.81, 0]}>
+            <Physics gravity={[0, -9.81, 0]}>
               <Map />
               <Forest />
               <Player />
