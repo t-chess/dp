@@ -112,7 +112,7 @@ function Airports() {
     }
 
     return (
-        <A11y role="content" description="Body reprezentující letiště">
+        // <A11y role="content" description="Body reprezentující letiště">
             <points ref={ref}>
                 <bufferGeometry>
                     <bufferAttribute
@@ -130,7 +130,7 @@ function Airports() {
                 </bufferGeometry>
                 <pointsMaterial vertexColors map={circleTexture} size={pointSize} sizeAttenuation={true} transparent={true} alphaTest={0.5} />
             </points>
-        </A11y>
+        // </A11y>
     );
 }
 
