@@ -17,7 +17,7 @@ const Data = () => {
         <Layers />
         <Airports />
         <Flights />
-        <Stats />
+        {/* <Stats /> */}
         <ambientLight intensity={3} />
       </Canvas>
       <A11yAnnouncer />

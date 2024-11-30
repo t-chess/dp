@@ -6,12 +6,6 @@ import { A11y } from "@react-three/a11y";
 
 const Globe = () => {
     const {radius, darkmode, autoRotate} = useData();
-    const controls = useRef();
-    const [speed, setSpeed] = useState();
-    const setRotateSpeed = () => {
-        const distance = controls.current.getDistance();
-        setSpeed(MathUtils.lerp(2, 0.5, (6 - distance) / 6)); 
-    }
 
     return (
         <>
@@ -22,7 +16,7 @@ const Globe = () => {
                 </mesh>
             </A11y>
             <color attach='background' args={[darkmode?0x1a060f:0xcec790]} />
-            <OrbitControls ref={controls} autoRotate={autoRotate} maxDistance={6} minDistance={1.25} enablePan={false} rotateSpeed={speed} onChange={setRotateSpeed} />
+            <OrbitControls autoRotate={autoRotate} maxDistance={6} minDistance={1.25} enablePan={false} />
         </>
     )
 }
